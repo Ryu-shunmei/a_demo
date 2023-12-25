@@ -30,6 +30,25 @@ async def orgs(role_id: str, db: DB = Depends(get_db)):
         )
 
 
+@org_router.get("/orgs_tree")
+async def orgs(db: DB = Depends(get_db)):
+    try:
+
+        orgs = await orgs_crud.query_all_orgs(db)
+
+        return JSONResponse(
+            status_code=200,
+            content=orgs
+        )
+    except Exception as err:
+        logger.exception(err)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": "An unknown exception occurred, please try again later."}
+        )
+
+
 @org_router.get("/options/orgs")
 async def orgs(role_id: str, db: DB = Depends(get_db)):
     try:

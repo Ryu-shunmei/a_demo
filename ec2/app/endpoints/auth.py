@@ -44,7 +44,7 @@ async def auth_for_token(auth_user: dict, db: DB = Depends(get_db)):
 @auth_router.get("/token")
 async def update_token(user_id: str, role_id: str, db: DB = Depends(get_db)):
     try:
-        await auth_crud.update_user_curr_role_id(db, user_id, role_id)
+        await auth_crud.update_user_default_role_id(db, user_id, role_id)
         payload = await auth_crud.query_token_payload(db, user_id)
         access_token = gen_access_token(payload=payload)
         return JSONResponse(

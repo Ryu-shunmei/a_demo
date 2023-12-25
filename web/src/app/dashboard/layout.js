@@ -103,7 +103,7 @@ const navConfig = [
   },
   {
     id: 2,
-    lable: "社員管理",
+    lable: "ユーザー管理",
     path: "/dashboard/user-manage",
     icon: "bi:people",
     accessCode: "USER_01",
@@ -117,7 +117,7 @@ const navConfig = [
   },
   {
     id: 4,
-    lable: "銀行管理",
+    lable: "金融機関管理",
     path: "/dashboard/bank-manage",
     icon: "bi:bank",
     accessCode: "BANK_01",

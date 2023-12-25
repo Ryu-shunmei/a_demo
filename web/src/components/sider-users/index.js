@@ -29,6 +29,7 @@ import myAxios from "@/utils/my-axios";
 import { Fragment, use, useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useBoolean } from "@/hooks/use-boolean";
+import { useAuthContext } from "@/hooks/use-auth-context";
 
 export default function SiderUsersConf({
   org_id,
@@ -37,6 +38,7 @@ export default function SiderUsersConf({
   setShowRowsData,
   showRowsData,
 }) {
+  const { user } = useAuthContext();
   const [outOrgUsers, setOutOrgUsers] = useState([]);
   const [inOrgUsers, setInOrgUsers] = useState([]);
   const [roleTypes, setRoleTypes] = useState([]);
@@ -317,7 +319,12 @@ export default function SiderUsersConf({
   return (
     <Fragment>
       <div className="w-full h-[48px] flex flex-row justify-start items-center">
-        <Button size="sm" color="secondary" onClick={handleInsert}>
+        <Button
+          size="sm"
+          color="secondary"
+          onClick={handleInsert}
+          isDisabled={!user?.permission_codes.includes("P011")}
+        >
           メンバー追加
         </Button>
       </div>
@@ -624,7 +631,7 @@ export default function SiderUsersConf({
 
                     <CheckboxGroup
                       size="sm"
-                      label="銀行管理"
+                      label="金融機関管理"
                       orientation="horizontal"
                       color="secondary"
                       classNames={{
@@ -794,7 +801,7 @@ export default function SiderUsersConf({
                     )}
                     {user?.permissions_bank?.length > 0 && (
                       <div>
-                        <div className="text-[9px] pl-1">銀行管理</div>
+                        <div className="text-[9px] pl-1">金融機関管理</div>
                         <div className="w-full flex flex-row flex-wrap justify-start items-start">
                           {user?.permissions_bank_.includes("P013") && (
                             <Chip
@@ -856,7 +863,10 @@ export default function SiderUsersConf({
                       size="sm"
                       color="secondary"
                       isIconOnly
-                      isDisabled={disabledKeys.includes(user.id)}
+                      isDisabled={
+                        disabledKeys.includes(user.id) ||
+                        !user?.permission_codes.includes("P008")
+                      }
                       onClick={() => handleEdit(user)}
                     >
                       <Icon width={16} icon="bi:pencil" />
@@ -867,7 +877,10 @@ export default function SiderUsersConf({
                       size="sm"
                       color="secondary"
                       isIconOnly
-                      isDisabled={disabledKeys.includes(user.id)}
+                      isDisabled={
+                        disabledKeys.includes(user.id) ||
+                        !user?.permission_codes.includes("P015")
+                      }
                       onClick={open.onTrue}
                     >
                       <Icon width={19} icon="bi:trash3" />

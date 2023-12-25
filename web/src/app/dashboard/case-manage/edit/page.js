@@ -359,12 +359,12 @@ export default function Page() {
                   }
                   color="secondary"
                   className="w-[320px]"
-                  aria-label="所属銀行"
+                  aria-label="所属金融機関"
                   labelPlacement="outside"
                   startContent={
                     <div className="pointer-events-none flex items-center">
                       <span className="text-default-400 text-[12px] min-w-[55px] text-start">
-                        所属銀行:
+                        所属金融機関:
                       </span>
                     </div>
                   }

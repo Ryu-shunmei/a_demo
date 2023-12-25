@@ -94,7 +94,7 @@ export default function AuthProvider({ children }) {
 
   // SWITCH
   const switch_role = useCallback(async (user_id, role_id) => {
-    const response = await myAxios.put(
+    const response = await myAxios.get(
       `/token?user_id=${user_id}&role_id=${role_id}`
     );
     localStorage.setItem("accessToken", response.data.access_token);
@@ -108,7 +108,6 @@ export default function AuthProvider({ children }) {
         user: user,
       },
     });
-    window.location.href = "/dashboard/cases";
   }, []);
 
   // LOGOUT

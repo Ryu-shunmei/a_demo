@@ -21,8 +21,10 @@ import {
 import myAxios from "@/utils/my-axios";
 import { Icon } from "@iconify/react";
 import { jwtDecode } from "jwt-decode";
+import { useAuthContext } from "@/hooks/use-auth-context";
 
 export default function Page() {
+  const state = useAuthContext();
   const [users, setUsers] = useState([]);
   const [roleTypes, setRoleTypes] = useState([]);
 
@@ -203,7 +205,12 @@ export default function Page() {
         <div className="text-[18px] text-secondary-600 font-medium">
           ユーザー管理
         </div>
-        <Button size="sm" color="secondary" onClick={handleInsert}>
+        <Button
+          size="sm"
+          color="secondary"
+          onClick={handleInsert}
+          isDisabled={!state?.user?.permission_codes.includes("P007")}
+        >
           ユーザー新規
         </Button>
       </div>
@@ -224,353 +231,357 @@ export default function Page() {
             <TableColumn></TableColumn>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell width={130}>
-                  {editUserID === user.id ? (
-                    <Input
-                      className="max-w-xs"
-                      aria-label="name"
-                      size="sm"
-                      labelPlacement="outside"
-                      color="secondary"
-                      name="name"
-                      value={userFormik.values.name}
-                      onChange={userFormik.handleChange}
-                    />
-                  ) : (
-                    <div
-                      className={
-                        disabledKeys?.includes(user.id)
-                          ? "text-secondary-200"
-                          : "text-secondary-600"
-                      }
-                    >
-                      {user.name}
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell width={200}>
-                  {editUserID === user.id ? (
-                    <Input
-                      className="max-w-xs"
-                      aria-label="name"
-                      size="sm"
-                      labelPlacement="outside"
-                      color="secondary"
-                      name="email"
-                      value={userFormik.values.email}
-                      onChange={userFormik.handleChange}
-                    />
-                  ) : (
-                    <div
-                      className={
-                        disabledKeys?.includes(user.id)
-                          ? "text-secondary-200"
-                          : "text-secondary-600"
-                      }
-                    >
-                      {user.email}
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {user.id === "new" ? (
-                    <div className="text-secondary-200">ーー</div>
-                  ) : (
-                    <div className=" max-w-[30vw] flex flex-row flex-wrap justify-start items-start">
-                      {user?.roles?.map((item, index) => (
-                        <Chip
-                          key={index}
-                          variant="flat"
+            {state?.user?.permission_codes?.includes("P006") &&
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell width={130}>
+                    {editUserID === user.id ? (
+                      <Input
+                        className="max-w-xs"
+                        aria-label="name"
+                        size="sm"
+                        labelPlacement="outside"
+                        color="secondary"
+                        name="name"
+                        value={userFormik.values.name}
+                        onChange={userFormik.handleChange}
+                      />
+                    ) : (
+                      <div
+                        className={
+                          disabledKeys?.includes(user.id)
+                            ? "text-secondary-200"
+                            : "text-secondary-600"
+                        }
+                      >
+                        {user.name}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell width={200}>
+                    {editUserID === user.id ? (
+                      <Input
+                        className="max-w-xs"
+                        aria-label="name"
+                        size="sm"
+                        labelPlacement="outside"
+                        color="secondary"
+                        name="email"
+                        value={userFormik.values.email}
+                        onChange={userFormik.handleChange}
+                      />
+                    ) : (
+                      <div
+                        className={
+                          disabledKeys?.includes(user.id)
+                            ? "text-secondary-200"
+                            : "text-secondary-600"
+                        }
+                      >
+                        {user.email}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {user.id === "new" ? (
+                      <div className="text-secondary-200">ーー</div>
+                    ) : (
+                      <div className=" max-w-[30vw] flex flex-row flex-wrap justify-start items-start">
+                        {user?.roles?.map((item, index) => (
+                          <Chip
+                            key={index}
+                            variant="flat"
+                            color="secondary"
+                            isDisabled={
+                              disabledKeys.includes(user.id) ||
+                              editUserID === user.id
+                            }
+                            className=" h-[14px] px-0 text-[9px] m-[1px]"
+                          >
+                            {`${item.org_name}:${
+                              roleTypes.find((i) => i.code === item.role_type)
+                                ?.name
+                            }`}
+                          </Chip>
+                        ))}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell width={editUserID === "new" ? 200 : 10}>
+                    {"new" === user.id && (
+                      <Select
+                        className="max-w-xs"
+                        aria-label="type"
+                        size="sm"
+                        labelPlacement="outside"
+                        color="secondary"
+                        name="org_id"
+                        onChange={userFormik.handleChange}
+                        selectedKeys={
+                          !!userFormik.values.org_id
+                            ? [userFormik.values.org_id]
+                            : []
+                        }
+                      >
+                        {accessOrgs.map((item) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )}
+                  </TableCell>
+                  <TableCell width={editUserID === "new" ? 150 : 10}>
+                    {"new" === user.id && (
+                      <Select
+                        size="sm"
+                        color="secondary"
+                        variant="flat"
+                        aria-label="role type"
+                        labelPlacement="outside"
+                        className="max-w-xs"
+                        name="role_type"
+                        value={userFormik.values.role_type}
+                        onChange={userFormik.handleChange}
+                        selectedKeys={
+                          !!userFormik.values.role_type
+                            ? [userFormik.values.role_type]
+                            : []
+                        }
+                      >
+                        {roleTypes.map((role) => (
+                          <SelectItem key={role.code} value={role.code}>
+                            {role.name}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )}
+                  </TableCell>
+                  <TableCell width={editUserID === "new" ? 320 : 10}>
+                    {"new" === user.id && (
+                      <div className=" max-w-[350px]">
+                        <CheckboxGroup
+                          size="sm"
+                          label="案件管理"
+                          orientation="horizontal"
                           color="secondary"
+                          classNames={{
+                            label: " text-[9px] h-[12px]",
+                          }}
+                          value={userFormik.values.permissions_case_}
+                          onValueChange={(v) => {
+                            userFormik.setFieldValue("permissions_case_", v);
+                          }}
+                        >
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P002"
+                          >
+                            追加
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P003"
+                          >
+                            更新
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P001"
+                          >
+                            検索
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P004"
+                          >
+                            インポート
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P005"
+                          >
+                            エクスポート
+                          </Checkbox>
+                        </CheckboxGroup>
+
+                        <CheckboxGroup
+                          size="sm"
+                          label="ユーザー管理"
+                          orientation="horizontal"
+                          color="secondary"
+                          classNames={{
+                            label: " text-[9px] h-[12px]",
+                          }}
+                          value={userFormik.values.permissions_user_}
+                          onValueChange={(v) =>
+                            userFormik.setFieldValue("permissions_user_", v)
+                          }
+                        >
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P007"
+                          >
+                            追加
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P008"
+                          >
+                            更新
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P015"
+                          >
+                            削除
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P006"
+                          >
+                            検索
+                          </Checkbox>
+                        </CheckboxGroup>
+
+                        <CheckboxGroup
+                          size="sm"
+                          label="組織管理"
+                          orientation="horizontal"
+                          color="secondary"
+                          classNames={{
+                            label: " text-[9px] h-[12px]",
+                          }}
+                          value={userFormik.values.permissions_org_}
+                          onValueChange={(v) =>
+                            userFormik.setFieldValue("permissions_org_", v)
+                          }
+                        >
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P010"
+                          >
+                            追加
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P011"
+                          >
+                            更新
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P009"
+                          >
+                            検索
+                          </Checkbox>
+                        </CheckboxGroup>
+
+                        <CheckboxGroup
+                          size="sm"
+                          label="金融機関管理"
+                          orientation="horizontal"
+                          color="secondary"
+                          classNames={{
+                            label: " text-[9px] h-[12px]",
+                          }}
+                          value={userFormik.values.permissions_bank_}
+                          onValueChange={(v) =>
+                            userFormik.setFieldValue("permissions_bank_", v)
+                          }
+                        >
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P013"
+                          >
+                            追加
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P014"
+                          >
+                            更新
+                          </Checkbox>
+                          <Checkbox
+                            classNames={{
+                              label: "text-[9px]",
+                            }}
+                            value="P012"
+                          >
+                            検索
+                          </Checkbox>
+                        </CheckboxGroup>
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-row justify-end items-center space-x-2">
+                      {editUserID === user.id && (
+                        <Button
+                          size="sm"
+                          color="secondary"
+                          isIconOnly
+                          onClick={handleUnEdit}
+                        >
+                          <Icon width={16} icon="bi:x-lg" />
+                        </Button>
+                      )}
+                      {editUserID === user.id && (
+                        <Button
+                          size="sm"
+                          color="secondary"
+                          isIconOnly
+                          onClick={userFormik.handleSubmit}
+                        >
+                          <Icon width={19} icon="bi:check2" />
+                        </Button>
+                      )}
+                      {editUserID !== user.id && (
+                        <Button
+                          size="sm"
+                          color="secondary"
+                          isIconOnly
                           isDisabled={
                             disabledKeys.includes(user.id) ||
-                            editUserID === user.id
+                            !state?.user?.permission_codes?.includes("P008")
                           }
-                          className=" h-[14px] px-0 text-[9px] m-[1px]"
+                          onClick={() => handleEdit(user)}
                         >
-                          {`${item.org_name}:${
-                            roleTypes.find((i) => i.code === item.role_type)
-                              ?.name
-                          }`}
-                        </Chip>
-                      ))}
+                          <Icon width={16} icon="bi:pencil" />
+                        </Button>
+                      )}
                     </div>
-                  )}
-                </TableCell>
-                <TableCell width={editUserID === "new" ? 200 : 10}>
-                  {"new" === user.id && (
-                    <Select
-                      className="max-w-xs"
-                      aria-label="type"
-                      size="sm"
-                      labelPlacement="outside"
-                      color="secondary"
-                      name="org_id"
-                      onChange={userFormik.handleChange}
-                      selectedKeys={
-                        !!userFormik.values.org_id
-                          ? [userFormik.values.org_id]
-                          : []
-                      }
-                    >
-                      {accessOrgs.map((item) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                </TableCell>
-                <TableCell width={editUserID === "new" ? 150 : 10}>
-                  {"new" === user.id && (
-                    <Select
-                      size="sm"
-                      color="secondary"
-                      variant="flat"
-                      aria-label="role type"
-                      labelPlacement="outside"
-                      className="max-w-xs"
-                      name="role_type"
-                      value={userFormik.values.role_type}
-                      onChange={userFormik.handleChange}
-                      selectedKeys={
-                        !!userFormik.values.role_type
-                          ? [userFormik.values.role_type]
-                          : []
-                      }
-                    >
-                      {roleTypes.map((role) => (
-                        <SelectItem key={role.code} value={role.code}>
-                          {role.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                </TableCell>
-                <TableCell width={editUserID === "new" ? 320 : 10}>
-                  {"new" === user.id && (
-                    <div className=" max-w-[350px]">
-                      <CheckboxGroup
-                        size="sm"
-                        label="案件管理"
-                        orientation="horizontal"
-                        color="secondary"
-                        classNames={{
-                          label: " text-[9px] h-[12px]",
-                        }}
-                        value={userFormik.values.permissions_case_}
-                        onValueChange={(v) => {
-                          userFormik.setFieldValue("permissions_case_", v);
-                        }}
-                      >
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P002"
-                        >
-                          追加
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P003"
-                        >
-                          更新
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P001"
-                        >
-                          検索
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P004"
-                        >
-                          インポート
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P005"
-                        >
-                          エクスポート
-                        </Checkbox>
-                      </CheckboxGroup>
-
-                      <CheckboxGroup
-                        size="sm"
-                        label="ユーザー管理"
-                        orientation="horizontal"
-                        color="secondary"
-                        classNames={{
-                          label: " text-[9px] h-[12px]",
-                        }}
-                        value={userFormik.values.permissions_user_}
-                        onValueChange={(v) =>
-                          userFormik.setFieldValue("permissions_user_", v)
-                        }
-                      >
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P007"
-                        >
-                          追加
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P008"
-                        >
-                          更新
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P015"
-                        >
-                          削除
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P006"
-                        >
-                          検索
-                        </Checkbox>
-                      </CheckboxGroup>
-
-                      <CheckboxGroup
-                        size="sm"
-                        label="組織管理"
-                        orientation="horizontal"
-                        color="secondary"
-                        classNames={{
-                          label: " text-[9px] h-[12px]",
-                        }}
-                        value={userFormik.values.permissions_org_}
-                        onValueChange={(v) =>
-                          userFormik.setFieldValue("permissions_org_", v)
-                        }
-                      >
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P010"
-                        >
-                          追加
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P011"
-                        >
-                          更新
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P009"
-                        >
-                          検索
-                        </Checkbox>
-                      </CheckboxGroup>
-
-                      <CheckboxGroup
-                        size="sm"
-                        label="銀行管理"
-                        orientation="horizontal"
-                        color="secondary"
-                        classNames={{
-                          label: " text-[9px] h-[12px]",
-                        }}
-                        value={userFormik.values.permissions_bank_}
-                        onValueChange={(v) =>
-                          userFormik.setFieldValue("permissions_bank_", v)
-                        }
-                      >
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P013"
-                        >
-                          追加
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P014"
-                        >
-                          更新
-                        </Checkbox>
-                        <Checkbox
-                          classNames={{
-                            label: "text-[9px]",
-                          }}
-                          value="P012"
-                        >
-                          検索
-                        </Checkbox>
-                      </CheckboxGroup>
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-row justify-end items-center space-x-2">
-                    {editUserID === user.id && (
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        isIconOnly
-                        onClick={handleUnEdit}
-                      >
-                        <Icon width={16} icon="bi:x-lg" />
-                      </Button>
-                    )}
-                    {editUserID === user.id && (
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        isIconOnly
-                        onClick={userFormik.handleSubmit}
-                      >
-                        <Icon width={19} icon="bi:check2" />
-                      </Button>
-                    )}
-                    {editUserID !== user.id && (
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        isIconOnly
-                        isDisabled={disabledKeys.includes(user.id)}
-                        onClick={() => handleEdit(user)}
-                      >
-                        <Icon width={16} icon="bi:pencil" />
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>

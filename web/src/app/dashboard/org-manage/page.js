@@ -29,6 +29,7 @@ import { Icon } from "@iconify/react";
 import SiderUsersConf from "@/components/sider-users";
 
 export default function Page() {
+  const { user } = useAuthContext();
   const [rowsData, setRowsData] = useState([]);
   const [showRowsData, setShowRowsData] = useState([]);
   const [defaultKeys, setDefaultKeys] = useState([]);
@@ -38,14 +39,29 @@ export default function Page() {
   const [showChildrenParentID, setShowChildrenParentID] = useState([null]);
   const [orgTypes, setOrgTypes] = useState([]);
   const [roleTypes, setRoleTypes] = useState([]);
+  const [accessOrgIds, setAccessOrgIds] = useState([]);
 
-  const fetchOrgs = useCallback(async () => {
+  const fetchAccessOrgs = useCallback(async () => {
     try {
       const res = await myAxios.get(
-        `/orgs?role_id=${
+        `/options/orgs?role_id=${
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
+      const temp = [];
+      res.data.forEach((item) => {
+        temp.push(item.id);
+      });
+      setAccessOrgIds(temp);
+      console.log("fetchAccessOrgs", res.data);
+    } catch (error) {
+      alert(error);
+    }
+  }, []);
+
+  const fetchOrgs = useCallback(async () => {
+    try {
+      const res = await myAxios.get(`/orgs_tree`);
       console.log(res.data);
       const tempRowsData = [];
       const mapTreeData = (treeData, tempRowsData) => {
@@ -74,6 +90,7 @@ export default function Page() {
         showChildrenParentID.includes(item.parent_id)
       );
       setShowRowsData(tempShowRowsData);
+      fetchAccessOrgs();
       console.log(tempShowRowsData);
     } catch (error) {
       console.log(error);
@@ -83,11 +100,7 @@ export default function Page() {
 
   const fetchOrgs_ = useCallback(async (id) => {
     try {
-      const res = await myAxios.get(
-        `/orgs?role_id=${
-          jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
-        }`
-      );
+      const res = await myAxios.get(`/orgs_tree`);
       console.log(res.data);
       const tempRowsData = [];
       const mapTreeData = (treeData, tempRowsData) => {
@@ -112,6 +125,7 @@ export default function Page() {
       };
       mapTreeData(res.data, tempRowsData);
       setRowsData(tempRowsData);
+      fetchAccessOrgs();
       return tempRowsData.find((item) => item.id == id);
     } catch (error) {
       console.log(error);
@@ -302,6 +316,7 @@ export default function Page() {
   }, [userConfID, editID]);
 
   useEffect(() => {
+    fetchAccessOrgs();
     fetchOrgTypes();
     fetchRoleTypes();
     fetchOrgs();
@@ -329,268 +344,282 @@ export default function Page() {
               <TableColumn></TableColumn>
             </TableHeader>
             <TableBody>
-              {showRowsData.map((row, index) => (
-                <TableRow key={row.id}>
-                  <TableCell>
-                    <div className="h-full flex flex-col justify-start items-start">
-                      <div className="flex flex-row justify-start items-center">
-                        {[...new Array(row.depth).keys()].map((i) => (
-                          <div key={i} className="min-w-[30px] w-[30px]" />
-                        ))}
+              {user?.permission_codes.includes("P009") &&
+                showRowsData.map((row, index) => (
+                  <TableRow key={row.id}>
+                    <TableCell>
+                      <div className="h-full flex flex-col justify-start items-start">
+                        <div className="flex flex-row justify-start items-center">
+                          {[...new Array(row.depth).keys()].map((i) => (
+                            <div key={i} className="min-w-[30px] w-[30px]" />
+                          ))}
 
-                        {editID === row.id ? (
-                          <Input
-                            className="max-w-xs border-secondary-500"
-                            aria-label="name"
-                            size="sm"
-                            labelPlacement="outside"
-                            color="secondary"
-                            name="name"
-                            value={formik.values.name}
-                            onChange={(e) => {
-                              formik.setFieldValue("name", e.target.value);
-                            }}
-                          />
-                        ) : (
-                          <div className="flex flex-row justify-start items-center space-x-[1px]">
-                            <Button
+                          {editID === row.id ? (
+                            <Input
+                              className="max-w-xs border-secondary-500"
+                              aria-label="name"
                               size="sm"
-                              variant="light"
+                              labelPlacement="outside"
                               color="secondary"
-                              isIconOnly
-                              isDisabled={
-                                !row?.hashChildren ||
-                                userConfID === row.id ||
-                                defaultKeys?.includes(row.id)
-                              }
-                              onClick={() => handleShowChildren(row?.id)}
-                            >
-                              <Icon
-                                width={14}
-                                icon={
-                                  row?.hashChildren
-                                    ? showChildrenParentID.includes(row.id)
-                                      ? "bi:caret-down-square"
-                                      : "bi:caret-right-square"
-                                    : "bi:dash-square"
+                              name="name"
+                              value={formik.values.name}
+                              onChange={(e) => {
+                                formik.setFieldValue("name", e.target.value);
+                              }}
+                            />
+                          ) : (
+                            <div className="flex flex-row justify-start items-center space-x-[1px]">
+                              <Button
+                                size="sm"
+                                variant="light"
+                                color="secondary"
+                                isIconOnly
+                                isDisabled={
+                                  !row?.hashChildren ||
+                                  userConfID === row.id ||
+                                  defaultKeys?.includes(row.id)
                                 }
-                              />
-                            </Button>
+                                onClick={() => handleShowChildren(row?.id)}
+                              >
+                                <Icon
+                                  width={14}
+                                  icon={
+                                    row?.hashChildren
+                                      ? showChildrenParentID.includes(row.id)
+                                        ? "bi:caret-down-square"
+                                        : "bi:caret-right-square"
+                                      : "bi:dash-square"
+                                  }
+                                />
+                              </Button>
 
-                            <div
-                              className={
-                                defaultKeys?.includes(row.id)
-                                  ? "text-secondary-200"
-                                  : "text-secondary-600"
-                              }
-                            >
-                              {row.name}
+                              <div
+                                className={
+                                  defaultKeys?.includes(row.id)
+                                    ? "text-secondary-200"
+                                    : "text-secondary-600"
+                                }
+                              >
+                                {row.name}
+                              </div>
                             </div>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {editID === row.id ? (
+                        <Select
+                          className="max-w-xs"
+                          aria-label="type"
+                          size="sm"
+                          labelPlacement="outside"
+                          color="secondary"
+                          name="type"
+                          onChange={formik.handleChange}
+                          isInvalid={
+                            formik.touched.type && Boolean(formik.errors.type)
+                          }
+                          errorMessage={
+                            formik.touched.type && formik.errors.type
+                          }
+                          selectedKeys={
+                            !!formik.values.type ? [formik.values.type] : []
+                          }
+                        >
+                          {orgTypes.map(
+                            (item) =>
+                              item.weight >= row.weight && (
+                                <SelectItem key={item.code} value={item.code}>
+                                  {item.name}
+                                </SelectItem>
+                              )
+                          )}
+                        </Select>
+                      ) : (
+                        <div
+                          className={
+                            defaultKeys?.includes(row.id)
+                              ? "text-secondary-200"
+                              : "text-secondary-600"
+                          }
+                        >
+                          {
+                            orgTypes.find((item) => item.code === row?.type)
+                              ?.name
+                          }
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell width={!userConfID ? "330px" : "10px"}>
+                      {!userConfID ? (
+                        <div className="flex flex-row justify-start items-start space-x-1">
+                          <div className="w-[280px] space-y-1">
+                            <Popover
+                              placement="bottom"
+                              isOpen={showUsersID === row.id}
+                              onOpenChange={(open) => {
+                                if (!open) {
+                                  setShowUsersID(null);
+                                } else {
+                                  setShowUsersID(row.id);
+                                }
+                              }}
+                            >
+                              <PopoverTrigger>
+                                <Button
+                                  size="sm"
+                                  color="secondary"
+                                  variant="flat"
+                                  fullWidth
+                                  isDisabled={
+                                    defaultKeys?.includes(row.id) ||
+                                    editID === row.id ||
+                                    !accessOrgIds.includes(row.id)
+                                  }
+                                  endContent={
+                                    <Icon
+                                      icon={
+                                        showUsersID === row.id
+                                          ? "bi:chevron-down"
+                                          : "bi:chevron-up"
+                                      }
+                                    />
+                                  }
+                                  className=" flex flex-row justify-between items-center px-4"
+                                >{`メンバー数: ${row.users.length} 名`}</Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <Listbox
+                                  variant="flat"
+                                  aria-label="users"
+                                  items={row.users}
+                                  classNames={{
+                                    base: "w-[250px]",
+                                  }}
+                                >
+                                  {(item) => (
+                                    <ListboxItem
+                                      key={item.name}
+                                      textValue={item.name}
+                                    >
+                                      <div className="w-full flex flex-row justify-between items-center">
+                                        <div className="flex flex-col justify-start items-start">
+                                          <div className="text-[12px]">
+                                            {item.name}
+                                          </div>
+                                          <div className="text-[12px] text-default-400">
+                                            {item.email}
+                                          </div>
+                                        </div>
+                                        <Chip
+                                          size="sm"
+                                          color="secondary"
+                                          variant="flat"
+                                        >
+                                          {
+                                            roleTypes.find(
+                                              (i) => i.code === item?.type
+                                            )?.name
+                                          }
+                                        </Chip>
+                                      </div>
+                                    </ListboxItem>
+                                  )}
+                                </Listbox>
+                              </PopoverContent>
+                            </Popover>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {editID === row.id ? (
-                      <Select
-                        className="max-w-xs"
-                        aria-label="type"
-                        size="sm"
-                        labelPlacement="outside"
-                        color="secondary"
-                        name="type"
-                        onChange={formik.handleChange}
-                        isInvalid={
-                          formik.touched.type && Boolean(formik.errors.type)
-                        }
-                        errorMessage={formik.touched.type && formik.errors.type}
-                        selectedKeys={
-                          !!formik.values.type ? [formik.values.type] : []
-                        }
-                      >
-                        {orgTypes.map(
-                          (item) =>
-                            item.weight >= row.weight && (
-                              <SelectItem key={item.code} value={item.code}>
-                                {item.name}
-                              </SelectItem>
-                            )
-                        )}
-                      </Select>
-                    ) : (
-                      <div
-                        className={
-                          defaultKeys?.includes(row.id)
-                            ? "text-secondary-200"
-                            : "text-secondary-600"
-                        }
-                      >
-                        {orgTypes.find((item) => item.code === row?.type)?.name}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell width={!userConfID ? "330px" : "10px"}>
-                    {!userConfID ? (
-                      <div className="flex flex-row justify-start items-start space-x-1">
-                        <div className="w-[280px] space-y-1">
-                          <Popover
-                            placement="bottom"
-                            isOpen={showUsersID === row.id}
-                            onOpenChange={(open) => {
-                              if (!open) {
-                                setShowUsersID(null);
+                          <Button
+                            size="sm"
+                            color="secondary"
+                            isIconOnly
+                            isDisabled={
+                              editID === row.id ||
+                              defaultKeys?.includes(row.id) ||
+                              !accessOrgIds.includes(row.id) ||
+                              !user?.permission_codes.includes("P011")
+                            }
+                            onClick={() => {
+                              if (userConfID === row.id) {
+                                setUserConfID(null);
                               } else {
-                                setShowUsersID(row.id);
+                                setUserConfID(row.id);
                               }
                             }}
                           >
-                            <PopoverTrigger>
-                              <Button
-                                size="sm"
-                                color="secondary"
-                                variant="flat"
-                                fullWidth
-                                isDisabled={
-                                  defaultKeys?.includes(row.id) ||
-                                  editID === row.id
-                                }
-                                endContent={
-                                  <Icon
-                                    icon={
-                                      showUsersID === row.id
-                                        ? "bi:chevron-down"
-                                        : "bi:chevron-up"
-                                    }
-                                  />
-                                }
-                                className=" flex flex-row justify-between items-center px-4"
-                              >{`メンバー数: ${row.users.length} 名`}</Button>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <Listbox
-                                variant="flat"
-                                aria-label="users"
-                                items={row.users}
-                                classNames={{
-                                  base: "w-[250px]",
-                                }}
-                              >
-                                {(item) => (
-                                  <ListboxItem
-                                    key={item.name}
-                                    textValue={item.name}
-                                  >
-                                    <div className="w-full flex flex-row justify-between items-center">
-                                      <div className="flex flex-col justify-start items-start">
-                                        <div className="text-[12px]">
-                                          {item.name}
-                                        </div>
-                                        <div className="text-[12px] text-default-400">
-                                          {item.email}
-                                        </div>
-                                      </div>
-                                      <Chip
-                                        size="sm"
-                                        color="secondary"
-                                        variant="flat"
-                                      >
-                                        {
-                                          roleTypes.find(
-                                            (i) => i.code === item?.type
-                                          )?.name
-                                        }
-                                      </Chip>
-                                    </div>
-                                  </ListboxItem>
-                                )}
-                              </Listbox>
-                            </PopoverContent>
-                          </Popover>
+                            <Icon width={16} icon="bi:sliders" />
+                          </Button>
                         </div>
-                        <Button
-                          size="sm"
-                          color="secondary"
-                          isIconOnly
-                          isDisabled={
-                            editID === row.id || defaultKeys?.includes(row.id)
-                          }
-                          onClick={() => {
-                            if (userConfID === row.id) {
-                              setUserConfID(null);
-                            } else {
-                              setUserConfID(row.id);
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell width="100px">
+                      <div className="flex flex-row justify-end items-center space-x-2">
+                        {editID !== row.id && (
+                          <Button
+                            size="sm"
+                            color="secondary"
+                            isIconOnly
+                            isDisabled={
+                              userConfID === row.id ||
+                              defaultKeys?.includes(row.id) ||
+                              !accessOrgIds.includes(row.id) ||
+                              !user?.permission_codes.includes("P011")
                             }
-                          }}
-                        >
-                          <Icon width={16} icon="bi:sliders" />
-                        </Button>
+                            onClick={() => handleEdit(row)}
+                          >
+                            <Icon width={16} icon="bi:pencil" />
+                          </Button>
+                        )}
+                        {editID !== row.id && (
+                          <Button
+                            size="sm"
+                            color="secondary"
+                            isIconOnly
+                            isDisabled={
+                              userConfID === row.id ||
+                              defaultKeys?.includes(row.id) ||
+                              !accessOrgIds.includes(row.id) ||
+                              !user?.permission_codes.includes("P010")
+                            }
+                            onClick={() =>
+                              handleInsert(
+                                index + 1,
+                                row.id,
+                                row.depth + 1,
+                                row.weight + 1
+                              )
+                            }
+                          >
+                            <Icon width={16} icon="bi:arrow-return-left" />
+                          </Button>
+                        )}
+                        {editID === row.id && (
+                          <Button
+                            size="sm"
+                            color="secondary"
+                            isIconOnly
+                            onClick={() => handleUnEdit(index)}
+                          >
+                            <Icon width={16} icon="bi:x-lg" />
+                          </Button>
+                        )}
+                        {editID === row.id && (
+                          <Button
+                            size="sm"
+                            color="secondary"
+                            isIconOnly
+                            onClick={formik.handleSubmit}
+                          >
+                            <Icon width={19} icon="bi:check2" />
+                          </Button>
+                        )}
                       </div>
-                    ) : (
-                      ""
-                    )}
-                  </TableCell>
-                  <TableCell width="100px">
-                    <div className="flex flex-row justify-end items-center space-x-2">
-                      {editID !== row.id && (
-                        <Button
-                          size="sm"
-                          color="secondary"
-                          isIconOnly
-                          isDisabled={
-                            userConfID === row.id ||
-                            defaultKeys?.includes(row.id)
-                          }
-                          onClick={() => handleEdit(row)}
-                        >
-                          <Icon width={16} icon="bi:pencil" />
-                        </Button>
-                      )}
-                      {editID !== row.id && (
-                        <Button
-                          size="sm"
-                          color="secondary"
-                          isIconOnly
-                          isDisabled={
-                            userConfID === row.id ||
-                            defaultKeys?.includes(row.id)
-                          }
-                          onClick={() =>
-                            handleInsert(
-                              index + 1,
-                              row.id,
-                              row.depth + 1,
-                              row.weight + 1
-                            )
-                          }
-                        >
-                          <Icon width={16} icon="bi:arrow-return-left" />
-                        </Button>
-                      )}
-                      {editID === row.id && (
-                        <Button
-                          size="sm"
-                          color="secondary"
-                          isIconOnly
-                          onClick={() => handleUnEdit(index)}
-                        >
-                          <Icon width={16} icon="bi:x-lg" />
-                        </Button>
-                      )}
-                      {editID === row.id && (
-                        <Button
-                          size="sm"
-                          color="secondary"
-                          isIconOnly
-                          onClick={formik.handleSubmit}
-                        >
-                          <Icon width={19} icon="bi:check2" />
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>

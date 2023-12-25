@@ -44,7 +44,59 @@ async def query_access_orgs(db: DB, role_id: str):
             **basic_org,
             "users": users
         })
+    with open("./ttt_data.json", mode="w+", encoding="utf8") as f:
+        import json
+        json.dump(orgs, f, ensure_ascii=False)
     list_tree = list_to_tree(orgs, role["org_id"])
+    return parse_step_key(list_tree)
+
+
+async def query_all_orgs(db: DB):
+    main_node = await db.fetch_one("SELECT id FROM orgs WHERE parent_id IS null;")
+    sql = f"""
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE parent_id IS null
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    """
+    basic_orgs = await db.fetch_all(sql)
+    orgs = []
+    for basic_org in basic_orgs:
+        sql = f"""
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '{basic_org["id"]}';
+        """
+        users = await db.fetch_all(sql)
+        orgs.append({
+            **basic_org,
+            "users": users
+        })
+    with open("./ttt_data.json", mode="w+", encoding="utf8") as f:
+        import json
+        json.dump(orgs, f, ensure_ascii=False)
+    list_tree = list_to_tree(orgs, main_node["id"])
     return parse_step_key(list_tree)
 
 

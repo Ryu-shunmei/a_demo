@@ -17,8 +17,10 @@ import {
 
 import myAxios from "@/utils/my-axios";
 import { Icon } from "@iconify/react";
+import { useAuthContext } from "@/hooks/use-auth-context";
 
 export default function Page() {
+  const { user } = useAuthContext();
   const [banks, setBanks] = useState([]);
   const [bankTypes, setBankTypes] = useState([]);
   const [editBankID, setEditBankID] = useState(null);
@@ -135,10 +137,15 @@ export default function Page() {
     <Fragment>
       <div className="h-[48px] px-[16px] w-full flex flex-row justify-between items-center">
         <div className="text-[18px] text-secondary-600 font-medium">
-          銀行管理
+          金融機関管理
         </div>
-        <Button size="sm" color="secondary" onClick={handleInsert}>
-          銀行新規
+        <Button
+          size="sm"
+          color="secondary"
+          onClick={handleInsert}
+          isDisabled={!user?.permission_codes.includes("P013")}
+        >
+          金融機関新規
         </Button>
       </div>
       <div className="h-full min-h-[calc(100vh_-_112px)] px-[8px]">
@@ -149,106 +156,115 @@ export default function Page() {
           disabledKeys={disabledKeys}
         >
           <TableHeader>
-            <TableColumn>銀行名</TableColumn>
-            <TableColumn>連携先区分</TableColumn>
+            <TableColumn>金融機関名</TableColumn>
+            <TableColumn>提携種別</TableColumn>
             <TableColumn></TableColumn>
           </TableHeader>
           <TableBody>
-            {banks.map((bank) => (
-              <TableRow key={bank.id}>
-                <TableCell>
-                  {editBankID === bank.id ? (
-                    <Input
-                      className="max-w-xs"
-                      aria-label="name"
-                      size="sm"
-                      labelPlacement="outside"
-                      color="secondary"
-                      name="name"
-                      value={bankFormik.values.name}
-                      onChange={bankFormik.handleChange}
-                    />
-                  ) : (
-                    <div
-                      className={
-                        disabledKeys?.includes(bank.id)
-                          ? "text-secondary-200"
-                          : "text-secondary-600"
-                      }
-                    >
-                      {bank.name}
+            {user?.permission_codes.includes("P012") &&
+              banks.map((bank) => (
+                <TableRow key={bank.id}>
+                  <TableCell>
+                    {editBankID === bank.id ? (
+                      <Input
+                        className="max-w-xs"
+                        aria-label="name"
+                        size="sm"
+                        labelPlacement="outside"
+                        color="secondary"
+                        name="name"
+                        value={bankFormik.values.name}
+                        onChange={bankFormik.handleChange}
+                      />
+                    ) : (
+                      <div
+                        className={
+                          disabledKeys?.includes(bank.id)
+                            ? "text-secondary-200"
+                            : "text-secondary-600"
+                        }
+                      >
+                        {bank.name}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editBankID === bank.id ? (
+                      <Select
+                        className="max-w-xs"
+                        aria-label="type"
+                        size="sm"
+                        labelPlacement="outside"
+                        color="secondary"
+                        name="type"
+                        onChange={bankFormik.handleChange}
+                        selectedKeys={
+                          !!bankFormik.values.type
+                            ? [bankFormik.values.type]
+                            : []
+                        }
+                      >
+                        {bankTypes.map((item) => (
+                          <SelectItem key={item.code} value={item.code}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    ) : (
+                      <div
+                        className={
+                          disabledKeys?.includes(bank.id)
+                            ? "text-secondary-200"
+                            : "text-secondary-600"
+                        }
+                      >
+                        {
+                          bankTypes.find((item) => item.code === bank?.type)
+                            ?.name
+                        }
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-row justify-end items-center space-x-2">
+                      {editBankID === bank.id && (
+                        <Button
+                          size="sm"
+                          color="secondary"
+                          isIconOnly
+                          onClick={handleUnEdit}
+                        >
+                          <Icon width={16} icon="bi:x-lg" />
+                        </Button>
+                      )}
+                      {editBankID === bank.id && (
+                        <Button
+                          size="sm"
+                          color="secondary"
+                          isIconOnly
+                          onClick={bankFormik.handleSubmit}
+                        >
+                          <Icon width={19} icon="bi:check2" />
+                        </Button>
+                      )}
+                      {editBankID !== bank.id && (
+                        <Button
+                          size="sm"
+                          color="secondary"
+                          isIconOnly
+                          isDisabled={
+                            disabledKeys.includes(bank.id) ||
+                            !user?.permission_codes.includes("P014")
+                          }
+                          onClick={() => handleEdit(bank)}
+                        >
+                          <Icon width={16} icon="bi:pencil" />
+                        </Button>
+                      )}
                     </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {editBankID === bank.id ? (
-                    <Select
-                      className="max-w-xs"
-                      aria-label="type"
-                      size="sm"
-                      labelPlacement="outside"
-                      color="secondary"
-                      name="type"
-                      onChange={bankFormik.handleChange}
-                      selectedKeys={
-                        !!bankFormik.values.type ? [bankFormik.values.type] : []
-                      }
-                    >
-                      {bankTypes.map((item) => (
-                        <SelectItem key={item.code} value={item.code}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  ) : (
-                    <div
-                      className={
-                        disabledKeys?.includes(bank.id)
-                          ? "text-secondary-200"
-                          : "text-secondary-600"
-                      }
-                    >
-                      {bankTypes.find((item) => item.code === bank?.type)?.name}
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-row justify-end items-center space-x-2">
-                    {editBankID === bank.id && (
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        isIconOnly
-                        onClick={handleUnEdit}
-                      >
-                        <Icon width={16} icon="bi:x-lg" />
-                      </Button>
-                    )}
-                    {editBankID === bank.id && (
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        isIconOnly
-                        onClick={bankFormik.handleSubmit}
-                      >
-                        <Icon width={19} icon="bi:check2" />
-                      </Button>
-                    )}
-                    {editBankID !== bank.id && (
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        isIconOnly
-                        isDisabled={disabledKeys.includes(bank.id)}
-                        onClick={() => handleEdit(bank)}
-                      >
-                        <Icon width={16} icon="bi:pencil" />
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>
