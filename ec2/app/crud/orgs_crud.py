@@ -44,9 +44,9 @@ async def query_access_orgs(db: DB, role_id: str):
             **basic_org,
             "users": users
         })
-    with open("./ttt_data.json", mode="w+", encoding="utf8") as f:
-        import json
-        json.dump(orgs, f, ensure_ascii=False)
+    # with open("./ttt_data.json", mode="w+", encoding="utf8") as f:
+    #     import json
+    #     json.dump(orgs, f, ensure_ascii=False)
     list_tree = list_to_tree(orgs, role["org_id"])
     return parse_step_key(list_tree)
 
