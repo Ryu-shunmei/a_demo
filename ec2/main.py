@@ -42,12 +42,12 @@ app.add_middleware(
 )
 
 # ROUTER追加
-app.include_router(auth_router)
-app.include_router(master_router)
-app.include_router(banks_router)
-app.include_router(org_router)
-app.include_router(users_router)
-app.include_router(cases_router)
+app.include_router(auth_router, prefix="/api")
+app.include_router(master_router, prefix="/api")
+app.include_router(banks_router, prefix="/api")
+app.include_router(org_router, prefix="/api")
+app.include_router(users_router, prefix="/api")
+app.include_router(cases_router, prefix="/api")
 
 if __name__ == "__main__":
     from uvicorn import run

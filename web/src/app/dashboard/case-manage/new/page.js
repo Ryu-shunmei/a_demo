@@ -11,12 +11,18 @@ import {
   Checkbox,
   Divider,
   Textarea,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@nextui-org/react";
 
 import myAxios from "@/utils/my-axios";
 
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import { useBoolean } from "@/hooks/use-boolean";
 
 export default function Page() {
   const router = useRouter();
@@ -36,8 +42,7 @@ export default function Page() {
   const fetchAccessOrgs = useCallback(async () => {
     try {
       const res = await myAxios.get(
-        `/options/orgs?role_id=${
-          jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
+        `/options/orgs?role_id=${jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
       console.log("fetchAccessOrgs", res.data);
@@ -105,7 +110,8 @@ export default function Page() {
     onSubmit: async (data) => {
       console.log(data);
       try {
-        await myAxios.post("/case", data);
+        await myAxios.post("/case", { ...data, deposit_amount: !!data.deposit_amount ? data.deposit_amount : 0 });
+        router.push(`/dashboard/case-manage`);
       } catch (error) {
         console.log(error);
       }
@@ -135,6 +141,7 @@ export default function Page() {
     fetchAccessOrgs();
     fetchBankTypes();
   }, []);
+  const open = useBoolean()
   return (
     <Fragment>
       <div className="h-[48px] px-[16px] w-full flex flex-row justify-between items-center">
@@ -150,9 +157,41 @@ export default function Page() {
           >
             戻る
           </Button>
-          <Button size="sm" color="secondary" onClick={formik.handleSubmit}>
-            確認
+          <Button size="sm" color="secondary" onClick={open.onTrue}>
+            登録
           </Button>
+          <Modal size="sm" isOpen={open.value} onClose={open.onFalse}>
+            <ModalContent>
+              <ModalHeader className="flex flex-col gap-1">
+                案件登録
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  案件を登録しますか？
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  size="sm"
+                  color="secondary"
+                  variant="flat"
+                  onPress={open.onFalse}
+                >
+                  いいえ
+                </Button>
+                <Button
+                  size="sm"
+                  color="secondary"
+                  onPress={async () => {
+                    formik.handleSubmit()
+                    open.onFalse();
+                  }}
+                >
+                  はい
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </div>
       </div>
       <div className="h-full min-h-[calc(100vh_-_112px)] px-[8px] ">
@@ -255,12 +294,12 @@ export default function Page() {
                   }
                   color="secondary"
                   className="w-[320px]"
-                  aria-label="所属銀行"
+                  aria-label="所属金融機関"
                   labelPlacement="outside"
                   startContent={
                     <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-[12px] min-w-[55px] text-start">
-                        所属銀行:
+                      <span className="text-default-400 text-[12px] min-w-[90px] text-start">
+                        金融機関:
                       </span>
                     </div>
                   }
@@ -391,8 +430,8 @@ export default function Page() {
                   labelPlacement="outside"
                   startContent={
                     <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-[12px] min-w-[55px] text-start">
-                        借入金額:
+                      <span className="text-default-400 text-[12px] min-w-[90px] text-start">
+                        借入金額(円):
                       </span>
                     </div>
                   }
@@ -404,12 +443,12 @@ export default function Page() {
                   onChange={formik.handleChange}
                   color="secondary"
                   className="w-[320px]"
-                  aria-label="着金金額"
+                  aria-label="差引諸費用"
                   labelPlacement="outside"
                   startContent={
                     <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-[12px] min-w-[55px] text-start">
-                        着金金額:
+                      <span className="text-default-400 text-[12px] min-w-[90px] text-start">
+                        差引諸費用(円):
                       </span>
                     </div>
                   }

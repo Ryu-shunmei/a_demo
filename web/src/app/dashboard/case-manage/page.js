@@ -195,18 +195,19 @@ export default function Page() {
                             title="借入金額"
                             value={item.loan_amount.toLocaleString()}
                           />
-                          <CellItemRow
+                           <CellItemRow
                             title="差引諸費用"
+                            value={item.deposit_amount.toLocaleString()}
+                          />
+                          <CellItemRow
+                            title="着金金額"
                             value={
                               item.deduction_amount > 0
                                 ? item.deduction_amount.toLocaleString()
                                 : "ーー"
                             }
                           />
-                          <CellItemRow
-                            title="着金金額"
-                            value={item.deposit_amount.toLocaleString()}
-                          />
+                         
                         </div>
                         <div className="flex flex-row space-x-2 ">
                           <CellItemTextArea
