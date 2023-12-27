@@ -41,9 +41,9 @@ async def insert_case(db: DB, data: dict):
             '{data["exe_date"]}',
             '{data["house_code"]}',
             '{data["house_name"]}',
-            {data["loan_amount"]},
-            {int(data["loan_amount"])-int(data["deposit_amount"])},
-            {data["deposit_amount"]},
+            {int(data["loan_amount"]if data["loan_amount"] else 0)},
+            {int(data["deduction_amount"] if data["deduction_amount"] else 0)},
+            {int(data["loan_amount"])-int(data["deduction_amount"] if data["deduction_amount"] else 0)},
             '{data["heim_note"]}',
             '{data["shbs_note"]}',
             '{data["shbs_confirm"]}',
@@ -110,7 +110,7 @@ async def query_access_cases(db: DB, role_id: str):
             users.name,
             orgs.name as org_name,
             banks.name as bank_name,
-            banks.type
+            bank_types.name as type
         FROM
             cases
         JOIN
@@ -125,6 +125,10 @@ async def query_access_cases(db: DB, role_id: str):
             banks
             ON
             banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
         WHERE
             cases.org_id = '{org["id"]}';
         """
@@ -161,6 +165,7 @@ async def query_case(db: DB, id: int):
         cases.confirm_date
     FROM
         cases
+    
     WHERE
         cases.id = '{id}';
     """
@@ -183,9 +188,9 @@ async def update_case(db: DB, data: dict):
         exe_date = '{data["exe_date"]}',
         house_code = '{data["house_code"]}',
         house_name = '{data["house_name"]}',
-        loan_amount = {data["loan_amount"]},
-        deduction_amount = {int(data["loan_amount"])-int(data["deposit_amount"])},
-        deposit_amount = {data["deposit_amount"]},
+        loan_amount = {int(data["loan_amount"]if data["loan_amount"] else 0)},
+        deduction_amount = {int(data["deduction_amount"] if data["deduction_amount"] else 0)},
+        deposit_amount = {int(data["loan_amount"])-int(data["deduction_amount"] if data["deduction_amount"] else 0)},
         heim_note = '{data["heim_note"]}',
         shbs_note = '{data["shbs_note"]}',
         shbs_confirm = '{data["shbs_confirm"]}',
@@ -200,4 +205,5 @@ async def update_case(db: DB, data: dict):
         cases.id = '{data["id"]}'
     """
     sql = sql.replace("''", "null")
+
     await db.execute(sql)

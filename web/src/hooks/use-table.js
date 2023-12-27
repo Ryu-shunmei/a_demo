@@ -11,18 +11,7 @@ export default function useTable(props) {
     props?.defaultRowsPerPage || 10
   );
 
-  const [order, setOrder] = useState(props?.defaultOrder || "asc");
-
-  const onSort = useCallback(
-    (id) => {
-      const isAsc = orderBy === id && order === "asc";
-      if (id !== "") {
-        setOrder(isAsc ? "desc" : "asc");
-        setOrderBy(id);
-      }
-    },
-    [order, orderBy]
-  );
+  const [order, setOrder] = useState(props?.defaultOrder || "ascending");
 
   const onChangeRowsPerPage = useCallback((event) => {
     setPage(0);
@@ -58,7 +47,7 @@ export default function useTable(props) {
   };
 
   const getComparator = (order, orderBy) => {
-    return order === "desc"
+    return order === "descending"
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   };
@@ -69,7 +58,6 @@ export default function useTable(props) {
     orderBy,
     rowsPerPage,
     //
-    onSort,
     onChangePage,
     onResetPage,
     onChangeRowsPerPage,

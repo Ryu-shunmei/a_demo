@@ -234,7 +234,7 @@ export default function Page() {
             {state?.user?.permission_codes?.includes("P006") &&
               users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell width={130}>
+                  <TableCell width={editUserID === "new" && 130}>
                     {editUserID === user.id ? (
                       <Input
                         className="max-w-xs"
@@ -258,7 +258,7 @@ export default function Page() {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell width={200}>
+                  <TableCell width={editUserID === "new" && 200}>
                     {editUserID === user.id ? (
                       <Input
                         className="max-w-xs"
