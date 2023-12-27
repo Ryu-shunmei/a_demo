@@ -202,6 +202,8 @@ export default function Page() {
         <div className="text-[18px] text-secondary-600 font-medium">
           ユーザー管理
         </div>
+      </div>
+      <div className="h-[48px] px-[16px] w-full flex flex-row justify-end items-center">
         <Button
           size="sm"
           color="secondary"
@@ -211,11 +213,15 @@ export default function Page() {
           ユーザー新規
         </Button>
       </div>
-      <div className="h-full min-h-[calc(100vh_-_112px)] px-[8px]">
+      <div className="h-full min-h-[calc(100vh_-_160px)] px-[8px]">
         <Table
+          isHeaderSticky
           aria-label="org users"
           color="secondary"
-          removeWrapper
+          classNames={{
+            wrapper:
+              "max-w-[calc(100vw_-_64px)] h-[calc(100vh_-_170px)] max-h-[calc(100vh_-_170px)] p-0 ",
+          }}
           disabledKeys={disabledKeys}
         >
           <TableHeader>

@@ -27,6 +27,8 @@ import { useAuthContext } from "@/hooks/use-auth-context";
 // ----------------------------------------------------------------------
 const defaultFilters = {
   name: "",
+  house_name: "",
+  house_code: "",
   exe_confirm: "",
   shbs_report: "",
   shbs_confirm: "",
@@ -241,13 +243,15 @@ export default function Page() {
         <div className="text-[18px] text-secondary-600 font-medium">
           案件管理
         </div>
+      </div>
+      <div className="h-[48px] px-[16px] w-full flex flex-row justify-end items-center">
         <div className=" space-x-2">
           <Button
             size="sm"
             color="secondary"
             isDisabled={!user?.permission_codes.includes("P004")}
           >
-            案件インポート
+            インポート
           </Button>
           <Button
             size="sm"
@@ -255,7 +259,7 @@ export default function Page() {
             isDisabled={!user?.permission_codes.includes("P005")}
             onClick={exportToCsv}
           >
-            案件エクスポート
+            エクスポート
           </Button>
           <Button
             size="sm"
@@ -263,36 +267,16 @@ export default function Page() {
             isDisabled={!user?.permission_codes.includes("P002")}
             onClick={() => router.push(`/dashboard/case-manage/new`)}
           >
-            案件新規
+            新規
           </Button>
         </div>
-      </div>
-      <div className="h-[48px] px-[16px] w-full flex flex-row justify-between items-center">
-        <Input
-          size="sm"
-          color="secondary"
-          isClearable={true}
-          onClear={() => setFilters(defaultFilters)}
-          value={filters?.house_name}
-          labelPlacement="outline"
-          placeholder="邸名で検索します"
-          startContent={
-            <Icon width={14} className="mb-0.5 " icon="bi:search" />
-          }
-          className="max-w-xs"
-          classNames={{
-            label: "text-black/50 dark:text-white/90",
-          }}
-          onChange={(e) => handleFilters("house_name", e.target.value)}
-          isDisabled={!user?.permission_codes.includes("P001")}
-        />
       </div>
       <div className="h-[64px] px-[16px] w-full flex flex-row justify-start items-end space-x-2">
         <Select
           size="sm"
           label="実行確定"
           color="secondary"
-          className="w-[140px] min-w-[140px]"
+          className="w-[80px] min-w-[80px]"
           classNames={{
             label: "text-default-600 ",
           }}
@@ -317,7 +301,7 @@ export default function Page() {
           size="sm"
           label="Ｇ報告用"
           color="secondary"
-          className="w-[140px] min-w-[140px]"
+          className="w-[80px] min-w-[80px]"
           classNames={{
             label: "text-default-600 ",
           }}
@@ -342,7 +326,7 @@ export default function Page() {
           size="sm"
           label="SHBS確認欄"
           color="secondary"
-          className="w-[140px] min-w-[140px]"
+          className="w-[80px] min-w-[80px]"
           classNames={{
             label: "text-default-600 ",
           }}
@@ -367,7 +351,7 @@ export default function Page() {
           size="sm"
           label="支店名"
           color="secondary"
-          className="w-[140px]"
+          className="w-[120px] min-w-[120px]"
           classNames={{
             label: "text-default-600",
           }}
@@ -390,7 +374,7 @@ export default function Page() {
           size="sm"
           label="担当者"
           color="secondary"
-          className="w-[140px]"
+          className="w-[120px] min-w-[120px]"
           classNames={{
             label: "text-default-600",
           }}
@@ -438,7 +422,7 @@ export default function Page() {
           size="sm"
           label="ローン対象"
           color="secondary"
-          className="w-[140px] min-w-[140px]"
+          className="w-[120px] min-w-[120px]"
           classNames={{
             label: "text-default-600 ",
           }}
@@ -463,7 +447,7 @@ export default function Page() {
           size="sm"
           label="APローン該当"
           color="secondary"
-          className="w-[140px] min-w-[140px]"
+          className="w-[90px] min-w-[90px]"
           classNames={{
             label: "text-default-600 ",
           }}
@@ -484,13 +468,44 @@ export default function Page() {
             </SelectItem>
           ))}
         </Select>
-        <Button
+        <Input
           size="sm"
           color="secondary"
-          onClick={() => setFilters(defaultFilters)}
-        >
-          リセット
-        </Button>
+          isClearable={true}
+          onClear={() => setFilters(defaultFilters)}
+          value={filters?.house_code}
+          labelPlacement="outside"
+          placeholder="邸コードで検索します"
+          label="邸コード"
+          startContent={
+            <Icon width={14} className="mb-0.5 " icon="bi:search" />
+          }
+          className="max-w-xs"
+          classNames={{
+            label: "text-default-600 ",
+          }}
+          onChange={(e) => handleFilters("house_code", e.target.value)}
+          isDisabled={!user?.permission_codes.includes("P001")}
+        />
+        <Input
+          size="sm"
+          color="secondary"
+          isClearable={true}
+          onClear={() => setFilters(defaultFilters)}
+          value={filters?.house_name}
+          labelPlacement="outside"
+          placeholder="邸名で検索します"
+          label="邸名"
+          startContent={
+            <Icon width={14} className="mb-0.5 " icon="bi:search" />
+          }
+          className="max-w-xs"
+          classNames={{
+            label: "text-default-600 ",
+          }}
+          onChange={(e) => handleFilters("house_name", e.target.value)}
+          isDisabled={!user?.permission_codes.includes("P001")}
+        />
       </div>
       <div className="h-full max-h-[calc(100vh_-_224px)] p-[8px] max-w-[calc(100vw_-_64px)]">
         <Table
@@ -772,6 +787,7 @@ function applyFilter({ inputData, comparator, filters }) {
   const {
     name,
     house_name,
+    house_code,
     exe_confirm,
     shbs_report,
     shbs_confirm,
@@ -794,6 +810,12 @@ function applyFilter({ inputData, comparator, filters }) {
   if (house_name) {
     inputData = inputData.filter((item) =>
       item.house_name.includes(house_name)
+    );
+  }
+
+  if (house_code) {
+    inputData = inputData.filter((item) =>
+      item.house_code.includes(house_code)
     );
   }
 

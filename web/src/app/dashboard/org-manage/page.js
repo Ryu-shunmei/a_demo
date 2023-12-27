@@ -313,15 +313,20 @@ export default function Page() {
 
   return (
     <Fragment>
-      <div className="h-[48px] pl-[16px] text-[18px] text-secondary-600 font-medium">
-        組織管理
+      <div className="h-[48px] px-[16px] w-full flex flex-row justify-between items-center">
+        <div className="text-[18px] text-secondary-600 font-medium">
+          組織管理
+        </div>
       </div>
       <div className="h-full min-h-[calc(100vh_-_112px)] px-[8px] flex flex-row justify-start items-start space-x-4">
         <div className=" flex-1">
           <Table
             aria-label="組織管理"
-            removeWrapper
             color="secondary"
+            classNames={{
+              wrapper:
+                "max-w-[calc(100vw_-_64px)] h-[calc(100vh_-_122px)] max-h-[calc(100vh_-_122px)] p-0 ",
+            }}
             disabledKeys={defaultKeys}
             selectionMode="single"
             selectedKeys={!!userConfID ? [userConfID] : []}

@@ -243,8 +243,10 @@ export default function Page() {
     <Fragment>
       <div className="h-[48px] px-[16px] w-full flex flex-row justify-between items-center">
         <div className="text-[18px] text-secondary-600 font-medium">
-          案件新規
+          案件更新
         </div>
+      </div>
+      <div className="h-[48px] px-[16px] w-full flex flex-row justify-end items-center">
         <div className=" space-x-2">
           <Button
             size="sm"
@@ -289,12 +291,12 @@ export default function Page() {
           </Modal>
         </div>
       </div>
-      <div className="h-full min-h-[calc(100vh_-_112px)] px-[8px] ">
-        <Card className="w-full min-h-[calc(100vh_-_128px)] p-[8px] space-y-2">
+      <div className="h-full min-h-[calc(100vh_-_160px)] px-[8px] ">
+        <Card className="w-full min-h-[calc(100vh_-_176px)] p-[8px] space-y-2 overflow-auto">
           <div className=" flex flex-col justify-start items-start space-y-2">
             <div className="text-secondary-600">担当者・確認情報</div>
-            <div className="w-full flex flex-row justify-start items-start space-x-10">
-              <div className="w-[696px] flex flex-row justify-start items-start space-x-[16px]">
+            <div className="w-full flex flex-row justify-between items-start space-x-12">
+              <div className=" flex-1 max-w-[980px] flex flex-row justify-between items-start space-x-10">
                 <Select
                   size="sm"
                   label="支店名"
@@ -343,7 +345,7 @@ export default function Page() {
                   ))}
                 </Select>
               </div>
-              <div className="w-[616px]  flex flex-row justify-between space-x-[8px]">
+              <div className="min-w-[616px] flex-1 max-w-[980px] flex flex-row justify-between space-x-[8px]">
                 <Select
                   size="sm"
                   label="管理担当用実行確定"
@@ -423,8 +425,8 @@ export default function Page() {
             </div>
           </div>
           <Divider />
-          <div className=" flex flex-row space-x-10">
-            <div className="w-[696px] flex flex-row justify-start items-start space-x-[16px]">
+          <div className=" flex flex-row justify-between space-x-12">
+            <div className=" flex-1 max-w-[980px] flex flex-row justify-between items-start space-x-10">
               <div className="w-[340px] space-y-2">
                 <div className="text-secondary-600">ローン情報</div>
                 <div className="flex flex-col justify-start items-start space-y-2">
@@ -729,7 +731,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className=" space-y-2 flex-1">
+            <div className=" space-y-2 min-w-[616px] max-w-[980px] flex-1 ">
               <div className="text-secondary-600">備考情報</div>
               <div className="flex flex-col justify-between items-start space-y-2">
                 <Textarea
@@ -738,7 +740,7 @@ export default function Page() {
                   onChange={formik.handleChange}
                   color="secondary"
                   label="備考(ハイム使用欄）"
-                  className="w-[616px]"
+                  className="min-w-[616px] w-full"
                   classNames={{
                     label: "text-default-600",
                     input: "min-h-[148px]",
@@ -750,7 +752,7 @@ export default function Page() {
                   onChange={formik.handleChange}
                   color="secondary"
                   label="備考(ＳＨＢＳ使用欄）"
-                  className="w-[616px]"
+                  className="min-w-[616px] w-full"
                   classNames={{
                     label: "text-default-600",
                     input: "min-h-[148px]",
