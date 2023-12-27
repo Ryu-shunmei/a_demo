@@ -61,12 +61,10 @@ export default function SiderUsersConf({
     onSubmit: async (data) => {
       try {
         const response = await myAxios.post("/user", data);
-        console.log("new user", response.data);
         await fetchOutOrgUsers();
         newUserFormik.resetForm();
         newUser.onFalse();
       } catch (error) {
-        console.log("new user", error);
         alert(error);
       }
     },
@@ -77,7 +75,6 @@ export default function SiderUsersConf({
     }
     try {
       const res = await myAxios.get(`/org/in/users?org_id=${org_id}`);
-      console.log("fetchInOrgUsers", res.data);
       const tempData = [];
       res.data.forEach((item) => {
         const temp1 = [];
@@ -122,7 +119,6 @@ export default function SiderUsersConf({
       });
       setInOrgUsers(tempData);
     } catch (error) {
-      console.log("fetchInOrgUsers", error);
       alert(error);
     }
   }, []);
@@ -132,7 +128,6 @@ export default function SiderUsersConf({
       const res = await myAxios.get(`/org/out/users?org_id=${org_id}`);
       setOutOrgUsers(res.data);
     } catch (error) {
-      console.log("fetchOutOrgUsers", error);
       alert(error);
     }
   }, []);
@@ -180,7 +175,6 @@ export default function SiderUsersConf({
     initialValues: newOrgUserDefaultValues,
     validationSchema: NewOrgUserSchema,
     onSubmit: async (data) => {
-      console.log(data);
       try {
         const permission_codes = [
           ...data.permissions_case_,
@@ -211,7 +205,7 @@ export default function SiderUsersConf({
         tempShowRowsData[targetIndex] = org;
         setShowRowsData(tempShowRowsData);
       } catch (error) {
-        console.log("new user dailog", error);
+        alert(error);
       }
     },
   });
@@ -497,7 +491,6 @@ export default function SiderUsersConf({
                       }}
                       value={newOrgUserformik.values.permissions_case_}
                       onValueChange={(v) => {
-                        console.log(v);
                         newOrgUserformik.setFieldValue("permissions_case_", v);
                       }}
                     >

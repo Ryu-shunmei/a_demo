@@ -93,10 +93,8 @@ export default function Page() {
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
-      console.log("fetchAccessOrgs", res.data);
       setAccessOrgs(res.data);
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   }, []);
@@ -108,7 +106,6 @@ export default function Page() {
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
-      console.log("fetchUsers", res.data);
       setUsers(res.data);
     } catch (error) {
       alert(error);

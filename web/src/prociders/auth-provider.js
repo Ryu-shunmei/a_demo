@@ -82,8 +82,6 @@ export default function AuthProvider({ children }) {
     const response = await myAxios.post("/token", data);
     localStorage.setItem("accessToken", response.data.access_token);
     const user = jwtDecode(response.data.access_token);
-
-    console.log("login info", user);
     dispatch({
       type: "LOGIN",
       payload: {
@@ -99,9 +97,6 @@ export default function AuthProvider({ children }) {
     );
     localStorage.setItem("accessToken", response.data.access_token);
     const user = jwtDecode(response.data.access_token);
-
-    console.log("switch role", user);
-
     dispatch({
       type: "SWITCH",
       payload: {

@@ -46,10 +46,8 @@ export default function Page() {
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
-      console.log("fetchAccessOrgs", res.data);
       setAccessOrgs(res.data);
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   }, []);
@@ -109,12 +107,11 @@ export default function Page() {
     initialValues: defaultValues,
     validationSchema: schema,
     onSubmit: async (data) => {
-      console.log(data);
       try {
         await myAxios.post("/case", data);
         router.push(`/dashboard/case-manage`);
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
   });
@@ -123,10 +120,8 @@ export default function Page() {
     async (org_id) => {
       try {
         const res = await myAxios.get(`/org/in/users?org_id=${org_id}`);
-        console.log("fetchInOrgUsers", res.data);
         setInOrgUsers(res.data);
       } catch (error) {
-        console.log("fetchInOrgUsers", error);
         alert(error);
       }
     },

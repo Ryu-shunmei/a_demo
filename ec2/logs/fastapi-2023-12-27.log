@@ -16604,3 +16604,2637 @@ asyncpg.exceptions.InvalidTextRepresentationError: invalid input syntax for type
             cases.org_id = 'bf27743c-96f7-4257-beb1-29e59ffc9a9d';
         
 2023-12-27 17:45:48.331 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:50362 - "GET /api/cases?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.1" 200
+2023-12-27 08:54:46.148 | INFO     | uvicorn.lifespan.on:startup:60 - Application startup complete.
+2023-12-27 08:57:48.746 | INFO     | providers.psql_provider:fetch_one:30 - 
+    SELECT
+        id,
+        email,
+        password,
+        default_role_id
+    FROM
+        users
+    WHERE
+        users.email = '001@demo.com';
+    
+2023-12-27 08:57:48.755 | INFO     | providers.psql_provider:fetch_one:30 - 
+    SELECT
+        id,
+        email,
+        name,
+        default_role_id
+    FROM
+        users
+    WHERE
+        users.id = '7b197c02-5128-4f36-a79e-7d4a0fa6f90f';
+    
+2023-12-27 08:57:48.761 | INFO     | providers.psql_provider:fetch_one:30 - 
+    SELECT
+        id,
+        email,
+        name,
+        default_role_id
+    FROM
+        users
+    WHERE
+        users.id = '7b197c02-5128-4f36-a79e-7d4a0fa6f90f';
+    
+2023-12-27 08:57:48.766 | INFO     | providers.psql_provider:fetch_all:39 - 
+    SELECT
+        roles.id,
+        roles.type,
+        orgs.id as org_id,
+        orgs.name as org_name
+    FROM
+        roles
+    JOIN
+        users
+        ON
+        users.id = roles.user_id
+    JOIN
+        orgs
+        ON
+        orgs.id = roles.org_id
+    WHERE
+        roles.user_id = '7b197c02-5128-4f36-a79e-7d4a0fa6f90f';
+    
+2023-12-27 08:57:48.773 | INFO     | providers.psql_provider:fetch_all:39 - 
+    SELECT
+        code,
+        name
+    FROM
+        permissions
+    JOIN
+        role_permission_rels
+        ON
+        role_permission_rels.permission_code = permissions.code
+    JOIN
+        roles
+        ON
+        roles.id = role_permission_rels.role_id
+    WHERE
+        roles.id = '5c524dcd-0db7-4097-9a83-dd88e759e82a';
+    
+2023-12-27 08:57:48.781 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55852 - "POST /api/token HTTP/1.0" 200
+2023-12-27 08:57:49.064 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 08:57:49.104 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 08:57:49.105 | INFO     | providers.psql_provider:fetch_one:30 - SELECT id FROM orgs WHERE parent_id IS null;
+2023-12-27 08:57:49.107 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM org_types;
+2023-12-27 08:57:49.110 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55860 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 08:57:49.114 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55878 - "GET /api/org_types HTTP/1.0" 200
+2023-12-27 08:57:49.215 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE parent_id IS null
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 08:57:49.218 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 08:57:49.262 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 08:57:49.267 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55870 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 08:57:49.270 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55900 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 08:57:49.329 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 08:57:49.337 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 08:57:49.344 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 08:57:49.352 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 08:57:49.359 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 08:57:49.366 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 08:57:49.376 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55894 - "GET /api/orgs_tree HTTP/1.0" 200
+2023-12-27 08:57:49.457 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 08:57:49.464 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 08:57:49.478 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55916 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 08:57:53.898 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 08:57:53.901 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 08:57:53.943 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 08:57:53.949 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55926 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 08:57:53.953 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL 
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 08:57:53.966 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 08:57:54.015 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 08:57:54.021 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 08:57:54.028 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 08:57:54.033 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55918 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 08:57:54.041 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 08:57:54.050 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 08:57:54.056 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 08:57:54.064 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '7b197c02-5128-4f36-a79e-7d4a0fa6f90f';
+        
+2023-12-27 08:57:54.071 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '367c101c-6b8a-416b-9576-5a891ce3af48';
+        
+2023-12-27 08:57:54.113 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = 'de0d0517-cec7-400a-bd65-a9981de92cd9';
+        
+2023-12-27 08:57:54.134 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '7f652673-ba2b-4baa-890a-a14a5e047bac';
+        
+2023-12-27 08:57:54.141 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '8b836417-d4d0-4516-92e0-d7ae521139bd';
+        
+2023-12-27 08:57:54.148 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '02581abd-51ca-47de-95b7-62ffcbaa6934';
+        
+2023-12-27 08:57:54.154 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = 'a2a0bb90-e3e2-441a-b009-8f68d4311740';
+        
+2023-12-27 08:57:54.162 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55934 - "GET /api/users?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 08:57:57.252 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 08:57:57.253 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM banks;
+2023-12-27 08:57:57.255 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 08:57:57.261 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55952 - "GET /api/banks HTTP/1.0" 200
+2023-12-27 08:57:57.264 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 08:57:57.273 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 08:57:57.281 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 08:57:57.328 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 08:57:57.331 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 08:57:57.336 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55940 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 08:57:57.338 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 08:57:57.345 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 08:57:57.358 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 08:57:57.366 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:55966 - "GET /api/cases?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:01:15.561 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 09:01:15.639 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM banks;
+2023-12-27 09:01:15.640 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:01:15.642 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:01:15.646 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:53896 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 09:01:15.649 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:53906 - "GET /api/banks HTTP/1.0" 200
+2023-12-27 09:01:15.651 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:01:15.659 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:53884 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:01:15.712 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 09:01:15.722 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:01:15.730 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:01:15.737 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:01:15.745 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:01:15.752 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:01:15.760 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:01:15.767 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:53918 - "GET /api/cases?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:02:21.055 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:02:21.133 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:02:21.135 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 09:02:21.137 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM banks;
+2023-12-27 09:02:21.154 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:56860 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 09:02:21.156 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:56876 - "GET /api/banks HTTP/1.0" 200
+2023-12-27 09:02:21.255 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 09:02:21.258 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:02:21.265 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:02:21.267 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:56846 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:02:21.273 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:02:21.279 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:02:21.287 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:02:21.295 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:02:21.303 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:02:21.309 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:56888 - "GET /api/cases?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:02:58.196 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 09:02:58.199 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:02:58.200 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:02:58.204 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:42886 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 09:02:58.207 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:02:58.215 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:42884 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:02:58.268 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL 
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:02:58.277 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:02:58.284 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:02:58.291 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:02:58.297 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:02:58.304 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:02:58.311 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:02:58.318 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '7b197c02-5128-4f36-a79e-7d4a0fa6f90f';
+        
+2023-12-27 09:02:58.325 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '367c101c-6b8a-416b-9576-5a891ce3af48';
+        
+2023-12-27 09:02:58.332 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = 'de0d0517-cec7-400a-bd65-a9981de92cd9';
+        
+2023-12-27 09:02:58.339 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '7f652673-ba2b-4baa-890a-a14a5e047bac';
+        
+2023-12-27 09:02:58.346 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '8b836417-d4d0-4516-92e0-d7ae521139bd';
+        
+2023-12-27 09:02:58.353 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '02581abd-51ca-47de-95b7-62ffcbaa6934';
+        
+2023-12-27 09:02:58.360 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = 'a2a0bb90-e3e2-441a-b009-8f68d4311740';
+        
+2023-12-27 09:02:58.367 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:42896 - "GET /api/users?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:00.151 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:00.273 | INFO     | providers.psql_provider:fetch_one:30 - SELECT id FROM orgs WHERE parent_id IS null;
+2023-12-27 09:03:00.276 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 09:03:00.277 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM org_types;
+2023-12-27 09:03:00.283 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36744 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 09:03:00.285 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36758 - "GET /api/org_types HTTP/1.0" 200
+2023-12-27 09:03:00.339 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:00.383 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE parent_id IS null
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 09:03:00.385 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36742 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:00.396 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:03:00.406 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:03:00.413 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:03:00.421 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:03:00.428 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:03:00.435 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:03:00.443 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36762 - "GET /api/orgs_tree HTTP/1.0" 200
+2023-12-27 09:03:00.520 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:00.527 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:00.536 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36770 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:02.253 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM bank_types;
+2023-12-27 09:03:02.255 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM banks;
+2023-12-27 09:03:02.261 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36784 - "GET /api/bank_types HTTP/1.0" 200
+2023-12-27 09:03:02.264 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36778 - "GET /api/banks HTTP/1.0" 200
+2023-12-27 09:03:03.771 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:03.816 | INFO     | providers.psql_provider:fetch_one:30 - SELECT id FROM orgs WHERE parent_id IS null;
+2023-12-27 09:03:03.896 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 09:03:03.899 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM org_types;
+2023-12-27 09:03:03.903 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36804 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 09:03:03.907 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36800 - "GET /api/org_types HTTP/1.0" 200
+2023-12-27 09:03:03.996 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:03.999 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE parent_id IS null
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 09:03:04.006 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36790 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:04.010 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:03:04.017 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:03:04.023 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:03:04.030 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:03:04.038 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:03:04.045 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email,
+            roles.type as type
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+
+        WHERE
+            roles.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:03:04.053 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36798 - "GET /api/orgs_tree HTTP/1.0" 200
+2023-12-27 09:03:04.126 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:04.133 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:04.141 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36810 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:04.891 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM role_types;
+2023-12-27 09:03:04.895 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:04.896 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:04.900 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36828 - "GET /api/role_types HTTP/1.0" 200
+2023-12-27 09:03:04.917 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:04.957 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36814 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:05.018 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL 
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:05.032 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:03:05.040 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:03:05.052 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:03:05.059 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:03:05.067 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:03:05.074 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            users.id as id,
+            users.name as name,
+            users.email as email
+        FROM
+            users
+        JOIN
+            roles
+            ON
+            roles.user_id = users.id
+        JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            orgs.id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:03:05.081 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '7b197c02-5128-4f36-a79e-7d4a0fa6f90f';
+        
+2023-12-27 09:03:05.088 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '367c101c-6b8a-416b-9576-5a891ce3af48';
+        
+2023-12-27 09:03:05.100 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = 'de0d0517-cec7-400a-bd65-a9981de92cd9';
+        
+2023-12-27 09:03:05.107 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '7f652673-ba2b-4baa-890a-a14a5e047bac';
+        
+2023-12-27 09:03:05.115 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '8b836417-d4d0-4516-92e0-d7ae521139bd';
+        
+2023-12-27 09:03:05.122 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = '02581abd-51ca-47de-95b7-62ffcbaa6934';
+        
+2023-12-27 09:03:05.130 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            roles.type as role_type,
+            orgs.name as org_name
+        FROM
+            roles
+        JOIN
+            users
+            ON
+            users.id = roles.user_id
+        LEFT JOIN
+            orgs
+            ON
+            orgs.id = roles.org_id
+        WHERE
+            users.id = 'a2a0bb90-e3e2-441a-b009-8f68d4311740';
+        
+2023-12-27 09:03:05.138 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36836 - "GET /api/users?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:06.106 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:06.107 | INFO     | providers.psql_provider:fetch_one:30 - SELECT org_id FROM roles WHERE id = '5c524dcd-0db7-4097-9a83-dd88e759e82a'
+2023-12-27 09:03:06.111 | INFO     | providers.psql_provider:fetch_all:39 - SELECT * FROM banks;
+2023-12-27 09:03:06.123 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36850 - "GET /api/banks HTTP/1.0" 200
+2023-12-27 09:03:06.227 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*
+    FROM
+        parents;
+    
+2023-12-27 09:03:06.231 | INFO     | providers.psql_provider:fetch_all:39 - 
+    WITH RECURSIVE parents AS (
+        SELECT id, type, name, parent_id, 0 as depth FROM orgs WHERE id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d'
+        UNION ALL
+        SELECT child.id, child.type, child.name, child.parent_id, parents.depth + 1 as depth FROM orgs as child INNER JOIN parents ON parents.id = child.parent_id
+    )
+    SELECT
+        parents.*,
+        org_types.weight as weight
+    FROM
+        parents
+    LEFT JOIN
+        org_types
+        ON
+        org_types.code = parents.type;
+    
+2023-12-27 09:03:06.237 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36848 - "GET /api/options/orgs?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200
+2023-12-27 09:03:06.240 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'dbe3b6de-637a-45aa-98eb-0d9a0d46374d';
+        
+2023-12-27 09:03:06.249 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '821c0b86-fdd8-4f44-842e-c94f891cfd9e';
+        
+2023-12-27 09:03:06.256 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '0052b5c2-8d30-4e7a-b5d7-c6a83d13d3d1';
+        
+2023-12-27 09:03:06.264 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '51f53182-a6ce-46f7-b0ef-8d3c27f68149';
+        
+2023-12-27 09:03:06.271 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = '4ee3c677-190d-411c-976d-207d148bcfe5';
+        
+2023-12-27 09:03:06.279 | INFO     | providers.psql_provider:fetch_all:39 - 
+        SELECT
+            cases.id,
+            cases.org_id,
+            cases.user_id,
+            cases.exe_confirm,
+            cases.shbs_report,
+            cases.bank_id,
+            cases.loan_target,
+            cases.ap_loan_applicable,
+            cases.exe_date,
+            cases.house_code,
+            cases.house_name,
+            cases.loan_amount,
+            cases.deduction_amount,
+            cases.deposit_amount,
+            cases.heim_note,
+            cases.shbs_note,
+            cases.shbs_confirm,
+            cases.collection_date,
+            cases.receive_date,
+            cases.registrate_date,
+            cases.schedule_date,
+            cases.establish_date,
+            cases.doc_send_date,
+            cases.confirm_date,
+            users.name,
+            orgs.name as org_name,
+            banks.name as bank_name,
+            bank_types.name as type
+        FROM
+            cases
+        JOIN
+            orgs
+            ON
+            orgs.id = cases.org_id
+        JOIN
+            users
+            ON
+            users.id = cases.user_id
+        JOIN
+            banks
+            ON
+            banks.id = cases.bank_id
+        JOIN
+            bank_types
+            ON
+            bank_types.code = banks.type
+        WHERE
+            cases.org_id = 'ceb84a22-5440-4323-b47f-b4aeec154cc2';
+        
+2023-12-27 09:03:06.286 | INFO     | uvicorn.protocols.http.httptools_impl:send:496 - 127.0.0.1:36860 - "GET /api/cases?role_id=5c524dcd-0db7-4097-9a83-dd88e759e82a HTTP/1.0" 200

@@ -66,7 +66,6 @@ export default function Page() {
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
-      console.log("fetchCases", res.data);
       setTableData(res.data);
     } catch (error) {
       alert(error);
@@ -93,10 +92,8 @@ export default function Page() {
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
-      console.log("fetchAccessOrgs", res.data);
       setAccessOrgs(res.data);
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   }, []);
@@ -105,10 +102,8 @@ export default function Page() {
     async (org_id) => {
       try {
         const res = await myAxios.get(`/org/in/users?org_id=${org_id}`);
-        console.log("fetchInOrgUsers", res.data);
         setInOrgUsers(res.data);
       } catch (error) {
-        console.log("fetchInOrgUsers", error);
         alert(error);
       }
     },
@@ -497,14 +492,15 @@ export default function Page() {
           リセット
         </Button>
       </div>
-      <div className="h-full max-h-[calc(100vh_-_160px)] p-[8px] max-w-[calc(100vw_-_64px)]">
+      <div className="h-full max-h-[calc(100vh_-_224px)] p-[8px] max-w-[calc(100vw_-_64px)]">
         <Table
+          isHeaderSticky
           aria-label="org users"
           color="secondary"
           className="table-fixed w-full"
           classNames={{
             wrapper:
-              "max-w-[calc(100vw_-_64px)] h-[calc(100vh_-_176px)] max-h-[calc(100vh_-_160px)] p-0 ",
+              "max-w-[calc(100vw_-_64px)] h-[calc(100vh_-_234px)] max-h-[calc(100vh_-_234px)] p-0 ",
           }}
           sortDescriptor={{ column: table.orderBy, direction: table.order }}
           onSortChange={(v) => {

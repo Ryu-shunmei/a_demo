@@ -53,7 +53,6 @@ export default function Page() {
         temp.push(item.id);
       });
       setAccessOrgIds(temp);
-      console.log("fetchAccessOrgs", res.data);
     } catch (error) {
       alert(error);
     }
@@ -62,7 +61,6 @@ export default function Page() {
   const fetchOrgs = useCallback(async () => {
     try {
       const res = await myAxios.get(`/orgs_tree`);
-      console.log(res.data);
       const tempRowsData = [];
       const mapTreeData = (treeData, tempRowsData) => {
         treeData.forEach((node, index) => {
@@ -91,9 +89,7 @@ export default function Page() {
       );
       setShowRowsData(tempShowRowsData);
       fetchAccessOrgs();
-      console.log(tempShowRowsData);
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   }, []);
@@ -101,7 +97,6 @@ export default function Page() {
   const fetchOrgs_ = useCallback(async (id) => {
     try {
       const res = await myAxios.get(`/orgs_tree`);
-      console.log(res.data);
       const tempRowsData = [];
       const mapTreeData = (treeData, tempRowsData) => {
         treeData.forEach((node, index) => {
@@ -128,7 +123,6 @@ export default function Page() {
       fetchAccessOrgs();
       return tempRowsData.find((item) => item.id == id);
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   }, []);
@@ -152,11 +146,9 @@ export default function Page() {
     initialValues: defaultValues,
     validationSchema: LoginSchema,
     onSubmit: async (data) => {
-      console.log(data);
       try {
         if (!data.id) {
           const res = await myAxios.post("/org", data);
-          console.log("new org", res.data);
           const org = await fetchOrgs_(res.data.id);
           const tempShowRowsData = JSON.parse(JSON.stringify(showRowsData));
           const targetIndex = showRowsData.findIndex(
@@ -169,7 +161,6 @@ export default function Page() {
           formik.resetForm();
         } else {
           const res = await myAxios.put(`/org?id=${data.id}`, data);
-          console.log("edit org", res.data);
           const org = await fetchOrgs_(res.data.id);
           const tempShowRowsData = JSON.parse(JSON.stringify(showRowsData));
           const targetIndex = showRowsData.findIndex(
@@ -181,7 +172,7 @@ export default function Page() {
           formik.resetForm();
         }
       } catch (error) {
-        console.log("new user dailog", error);
+        alert(error);
       }
     },
   });
@@ -199,7 +190,6 @@ export default function Page() {
     try {
       const response = await myAxios.get(`/role_types`);
       setRoleTypes(response.data);
-      console.log("role types", response.data);
     } catch (error) {
       alert(error);
     }
@@ -241,7 +231,6 @@ export default function Page() {
     formik.setFieldValue("users", []);
     setEditID("new");
     setShowRowsData(tempRowsData);
-    console.log(tempRowsData);
   };
 
   const handleUnInsert = (index) => {

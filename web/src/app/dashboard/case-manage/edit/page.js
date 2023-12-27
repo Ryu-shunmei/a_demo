@@ -47,10 +47,8 @@ export default function Page() {
           jwtDecode(localStorage.getItem("accessToken", {}))?.default_role_id
         }`
       );
-      console.log("fetchAccessOrgs", res.data);
       setAccessOrgs(res.data);
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   }, []);
@@ -110,12 +108,11 @@ export default function Page() {
     initialValues: defaultValues,
     validationSchema: schema,
     onSubmit: async (data) => {
-      console.log(data);
       try {
         await myAxios.put("/case", data);
         router.push(`/dashboard/case-manage`);
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
   });
@@ -124,10 +121,8 @@ export default function Page() {
     async (org_id) => {
       try {
         const res = await myAxios.get(`/org/in/users?org_id=${org_id}`);
-        console.log("fetchInOrgUsers", res.data);
         setInOrgUsers(res.data);
       } catch (error) {
-        console.log("fetchInOrgUsers", error);
         alert(error);
       }
     },
@@ -137,7 +132,6 @@ export default function Page() {
   const fetchCaseOptions = useCallback(async () => {
     try {
       const response = await myAxios.get(`/case/${search.get("case_id")}`);
-      console.log("fetchCaseOptions", response.data);
       formik.setFieldValue("id", !!response.data.id ? response.data.id : "");
       formik.setFieldValue(
         "org_id",
@@ -230,7 +224,6 @@ export default function Page() {
         !!response.data.confirm_date ? response.data.confirm_date : ""
       );
     } catch (error) {
-      console.log("fetchCaseOptions", error);
       alert(error);
     }
   }, []);

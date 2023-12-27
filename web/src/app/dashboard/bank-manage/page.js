@@ -40,7 +40,6 @@ export default function Page() {
     initialValues: bankDefaultValues,
     validationSchema: bankSchema,
     onSubmit: async (data) => {
-      console.log(data);
       try {
         if (editBankID === null || editBankID === "new") {
           await myAxios.post(`/bank`, data);
@@ -59,10 +58,8 @@ export default function Page() {
   const fetchBanks = useCallback(async () => {
     try {
       const res = await myAxios.get(`/banks`);
-      console.log("fetchBanks", res.data);
       setBanks(res.data);
     } catch (error) {
-      console.log("fetchBanks", error);
       alert(error);
     }
   }, []);
@@ -70,10 +67,8 @@ export default function Page() {
   const fetchBankTypes = useCallback(async () => {
     try {
       const res = await myAxios.get(`/bank_types`);
-      console.log("fetchBankTypes", res.data);
       setBankTypes(res.data);
     } catch (error) {
-      console.log("fetchBankTypes", error);
       alert(error);
     }
   }, []);
