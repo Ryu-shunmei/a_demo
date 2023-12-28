@@ -21,11 +21,12 @@ import {
 import myAxios from "@/utils/my-axios";
 
 import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useBoolean } from "@/hooks/use-boolean";
 
 export default function Page() {
   const router = useRouter();
+  const search = useSearchParams();
   const [accessOrgs, setAccessOrgs] = useState([]);
   const [inOrgUsers, setInOrgUsers] = useState([]);
   const [bankTypes, setBankTypes] = useState([]);
@@ -108,8 +109,8 @@ export default function Page() {
     validationSchema: schema,
     onSubmit: async (data) => {
       try {
-        await myAxios.post("/case", data);
-        router.push(`/dashboard/case-manage`);
+        await myAxios.put("/case", data);
+        router.push(`/dashboard/case-management`);
       } catch (error) {
         alert(error);
       }
@@ -128,13 +129,112 @@ export default function Page() {
     [formik.values.org_id]
   );
 
+  const fetchCaseOptions = useCallback(async () => {
+    try {
+      const response = await myAxios.get(`/case/${search.get("case_id")}`);
+      formik.setFieldValue("id", !!response.data.id ? response.data.id : "");
+      formik.setFieldValue(
+        "org_id",
+        !!response.data.org_id ? response.data.org_id : ""
+      );
+      formik.setFieldValue(
+        "user_id",
+        !!response.data.user_id ? response.data.user_id : ""
+      );
+      formik.setFieldValue(
+        "exe_confirm",
+        !!response.data.exe_confirm ? response.data.exe_confirm : ""
+      );
+      formik.setFieldValue(
+        "shbs_report",
+        !!response.data.shbs_report ? response.data.shbs_report : ""
+      );
+      formik.setFieldValue(
+        "bank_id",
+        !!response.data.bank_id ? response.data.bank_id : ""
+      );
+      formik.setFieldValue(
+        "loan_target",
+        !!response.data.loan_target ? response.data.loan_target : ""
+      );
+      formik.setFieldValue(
+        "ap_loan_applicable",
+        !!response.data.ap_loan_applicable
+          ? response.data.ap_loan_applicable
+          : ""
+      );
+      formik.setFieldValue(
+        "exe_date",
+        !!response.data.exe_date ? response.data.exe_date : ""
+      );
+      formik.setFieldValue(
+        "house_code",
+        !!response.data.house_code ? response.data.house_code : ""
+      );
+      formik.setFieldValue(
+        "house_name",
+        !!response.data.house_name ? response.data.house_name : ""
+      );
+      formik.setFieldValue(
+        "loan_amount",
+        !!response.data.loan_amount ? response.data.loan_amount : ""
+      );
+      formik.setFieldValue(
+        "deduction_amount",
+        !!response.data.deduction_amount ? response.data.deduction_amount : ""
+      );
+      formik.setFieldValue(
+        "heim_note",
+        !!response.data.heim_note ? response.data.heim_note : ""
+      );
+      formik.setFieldValue(
+        "shbs_note",
+        !!response.data.shbs_note ? response.data.shbs_note : ""
+      );
+      formik.setFieldValue(
+        "shbs_confirm",
+        !!response.data.shbs_confirm ? response.data.shbs_confirm : ""
+      );
+      formik.setFieldValue(
+        "collection_date",
+        !!response.data.collection_date ? response.data.collection_date : ""
+      );
+      formik.setFieldValue(
+        "receive_date",
+        !!response.data.receive_date ? response.data.receive_date : ""
+      );
+      formik.setFieldValue(
+        "registrate_date",
+        !!response.data.registrate_date ? response.data.registrate_date : ""
+      );
+      formik.setFieldValue(
+        "schedule_date",
+        !!response.data.schedule_date ? response.data.schedule_date : ""
+      );
+      formik.setFieldValue(
+        "establish_date",
+        !!response.data.establish_date ? response.data.establish_date : ""
+      );
+      formik.setFieldValue(
+        "doc_send_date",
+        !!response.data.doc_send_date ? response.data.doc_send_date : ""
+      );
+      formik.setFieldValue(
+        "confirm_date",
+        !!response.data.confirm_date ? response.data.confirm_date : ""
+      );
+    } catch (error) {
+      alert(error);
+    }
+  }, []);
+
   useEffect(() => {
     if (formik.values.org_id !== "") {
       fetchInOrgUsers(formik.values.org_id);
     }
   }, [formik.values.org_id]);
-
   useEffect(() => {
+    fetchCaseOptions();
     fetchAccessOrgs();
     fetchBankTypes();
   }, []);
@@ -143,7 +243,7 @@ export default function Page() {
     <Fragment>
       <div className="h-[48px] px-[16px] w-full flex flex-row justify-between items-center">
         <div className="text-[18px] text-secondary-600 font-medium">
-          案件新規
+          案件更新
         </div>
       </div>
       <div className="h-[48px] px-[16px] w-full flex flex-row justify-end items-center">
@@ -152,20 +252,20 @@ export default function Page() {
             size="sm"
             color="secondary"
             variant="flat"
-            onClick={() => router.push(`/dashboard/case-manage`)}
+            onClick={() => router.push(`/dashboard/case-management`)}
           >
             戻る
           </Button>
           <Button size="sm" color="secondary" onClick={open.onTrue}>
-            登録
+            更新
           </Button>
           <Modal size="sm" isOpen={open.value} onClose={open.onFalse}>
             <ModalContent>
               <ModalHeader className="flex flex-col gap-1">
-                案件登録
+                案件更新
               </ModalHeader>
               <ModalBody>
-                <p>案件を登録しますか？</p>
+                <p>案件を更新しますか？</p>
               </ModalBody>
               <ModalFooter>
                 <Button

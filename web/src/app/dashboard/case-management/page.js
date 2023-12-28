@@ -265,7 +265,7 @@ export default function Page() {
             size="sm"
             color="secondary"
             isDisabled={!user?.permission_codes.includes("P002")}
-            onClick={() => router.push(`/dashboard/case-manage/new`)}
+            onClick={() => router.push(`/dashboard/case-management/new`)}
           >
             新規
           </Button>
@@ -674,7 +674,7 @@ export default function Page() {
                       isIconOnly
                       onClick={() =>
                         router.push(
-                          `/dashboard/case-manage/edit?case_id=${row.id}`
+                          `/dashboard/case-management/edit?case_id=${row.id}`
                         )
                       }
                     >
