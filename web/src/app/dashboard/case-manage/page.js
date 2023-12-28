@@ -272,6 +272,15 @@ export default function Page() {
         </div>
       </div>
       <div className="h-[64px] px-[16px] w-full flex flex-row justify-start items-end space-x-2">
+        <Button
+          size="sm"
+          color="secondary"
+          variant="flat"
+          className="w-[60px] min-w-[60px]"
+          onClick={() => setFilters(defaultFilters)}
+        >
+          クレア
+        </Button>
         <Select
           size="sm"
           label="実行確定"
@@ -288,9 +297,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {["未", "済"].map((item) => (
             <SelectItem key={item} value={item}>
               {item}
@@ -313,9 +319,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {["未", "済"].map((item) => (
             <SelectItem key={item} value={item}>
               {item}
@@ -338,9 +341,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {["未", "済"].map((item) => (
             <SelectItem key={item} value={item}>
               {item}
@@ -361,9 +361,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {accessOrgs.map((org) => (
             <SelectItem key={org.name} value={org.name}>
               {org.name}
@@ -384,9 +381,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {inOrgUsers.map((user) => (
             <SelectItem key={user.name} value={user.name}>
               {user.name}
@@ -409,9 +403,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {bankTypes.map((option) => (
             <SelectItem key={option.name} value={option.name}>
               {option.name}
@@ -434,9 +425,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {["土地", "建物中間", "建物最終"].map((item) => (
             <SelectItem key={item} value={item}>
               {item}
@@ -459,9 +447,6 @@ export default function Page() {
           labelPlacement="outside"
           placeholder="　"
         >
-          <SelectItem key={""} value={""}>
-            ALL
-          </SelectItem>
           {["有", "無"].map((item) => (
             <SelectItem key={item} value={item}>
               {item}
@@ -523,40 +508,46 @@ export default function Page() {
             table.setOrder(v?.direction);
           }}
         >
-          <TableHeader className=" bg-green-500 ">
+          <TableHeader>
+            <TableColumn
+              key="action"
+              className="sticky left-0 min-w-[70px] max-w-[70px] z-50 whitespace-nowrap text-center"
+            >
+              編集
+            </TableColumn>
             <TableColumn
               key="exe_confirm"
-              className="sticky left-0 min-w-[60px] max-w-[60px] z-50 whitespace-nowrap text-center"
+              className="sticky left-[70px] min-w-[60px] max-w-[60px] z-50 whitespace-nowrap text-center"
             >
               実行確定
             </TableColumn>
             <TableColumn
               key="shbs_report"
-              className="sticky left-[60px] min-w-[60px] max-w-[60px] z-50 whitespace-nowrap text-center"
+              className="sticky left-[130px] min-w-[60px] max-w-[60px] z-50 whitespace-nowrap text-center"
             >
               Ｇ報告用
             </TableColumn>
             <TableColumn
               key="org_name"
-              className="sticky left-[120px] min-w-[90px] max-w-[90px] z-50 whitespace-nowrap text-center"
+              className="sticky left-[190px] min-w-[90px] max-w-[90px] z-50 whitespace-nowrap text-center"
             >
               支店名
             </TableColumn>
             <TableColumn
               key="name"
-              className="sticky left-[210px] min-w-[70px] max-w-[70px] z-50 whitespace-nowrap text-center"
+              className="sticky left-[280px] min-w-[70px] max-w-[70px] z-50 whitespace-nowrap text-center"
             >
               担当者
             </TableColumn>
             <TableColumn
               key="house_code"
-              className="sticky left-[280px] min-w-[100px] max-w-[100px] z-50 whitespace-nowrap text-center"
+              className="sticky left-[350px] min-w-[100px] max-w-[100px] z-50 whitespace-nowrap text-center"
             >
               邸コード
             </TableColumn>
             <TableColumn
               key="house_name"
-              className="sticky left-[380px] min-w-[120px] max-w-[120px] z-50 whitespace-nowrap text-center"
+              className="sticky left-[450px] min-w-[120px] max-w-[120px] z-50 whitespace-nowrap text-center"
             >
               邸名
             </TableColumn>
@@ -667,10 +658,6 @@ export default function Page() {
             >
               責任者確認日
             </TableColumn>
-            <TableColumn
-              key="action"
-              className="whitespace-nowrap"
-            ></TableColumn>
           </TableHeader>
           <TableBody>
             {dataFiltered
@@ -680,22 +667,36 @@ export default function Page() {
               )
               .map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell className="sticky left-0 min-w-[60px] max-w-[60px] bg-white z-50 whitespace-nowrap text-center">
+                  <TableCell className="sticky left-0 min-w-[70px] max-w-[70px] bg-white z-50 whitespace-nowrap text-center">
+                    <Button
+                      size="sm"
+                      color="secondary"
+                      isIconOnly
+                      onClick={() =>
+                        router.push(
+                          `/dashboard/case-manage/edit?case_id=${row.id}`
+                        )
+                      }
+                    >
+                      <Icon width={16} icon="bi:pencil" />
+                    </Button>
+                  </TableCell>
+                  <TableCell className="sticky left-[70px] min-w-[60px] max-w-[60px] bg-white z-50 whitespace-nowrap text-center">
                     {row?.exe_confirm || "ーー"}
                   </TableCell>
-                  <TableCell className="sticky left-[60px] min-w-[60px] max-w-[60px] bg-white z-50 whitespace-nowrap text-center">
+                  <TableCell className="sticky left-[130px] min-w-[60px] max-w-[60px] bg-white z-50 whitespace-nowrap text-center">
                     {row?.shbs_report || "ーー"}
                   </TableCell>
-                  <TableCell className="sticky left-[120px] min-w-[90px] max-w-[90px] bg-white z-50 whitespace-nowrap text-center">
+                  <TableCell className="sticky left-[190px] min-w-[90px] max-w-[90px] bg-white z-50 whitespace-nowrap text-center">
                     {row?.org_name || "ーー"}
                   </TableCell>
-                  <TableCell className="sticky left-[210px] min-w-[70px] max-w-[70px] bg-white z-50 whitespace-nowrap text-center">
+                  <TableCell className="sticky left-[280px] min-w-[70px] max-w-[70px] bg-white z-50 whitespace-nowrap text-center">
                     {row?.name}
                   </TableCell>
-                  <TableCell className="sticky left-[280px] min-w-[100px] max-w-[100px] bg-white z-50 whitespace-nowrap text-center">
+                  <TableCell className="sticky left-[350px] min-w-[100px] max-w-[100px] bg-white z-50 whitespace-nowrap text-center">
                     {row?.house_code || "ーー"}
                   </TableCell>
-                  <TableCell className="sticky left-[380px] min-w-[120px] max-w-[120px] bg-white z-50 whitespace-nowrap text-center">
+                  <TableCell className="sticky left-[450px] min-w-[120px] max-w-[120px] bg-white z-50 whitespace-nowrap text-center">
                     {row?.house_name || "ーー"}
                   </TableCell>
                   <TableCell className="w-full whitespace-nowrap text-center">
@@ -757,20 +758,6 @@ export default function Page() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {row?.confirm_date || "ーー"}
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap text-end">
-                    <Button
-                      size="sm"
-                      color="secondary"
-                      isIconOnly
-                      onClick={() =>
-                        router.push(
-                          `/dashboard/case-manage/edit?case_id=${row.id}`
-                        )
-                      }
-                    >
-                      <Icon width={16} icon="bi:pencil" />
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

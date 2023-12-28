@@ -293,15 +293,15 @@ export default function Page() {
       </div>
       <div className="h-full min-h-[calc(100vh_-_160px)] px-[8px] ">
         <Card className="w-full min-h-[calc(100vh_-_176px)] p-[8px] space-y-2 overflow-auto">
-          <div className=" flex flex-col justify-start items-start space-y-2">
+          <div className="space-y-2">
             <div className="text-secondary-600">担当者・確認情報</div>
-            <div className="w-full flex flex-row justify-between items-start space-x-12">
-              <div className=" flex-1 max-w-[980px] flex flex-row justify-between items-start space-x-10">
+            <div className="grid grid-cols-3">
+              <div>
                 <Select
                   size="sm"
                   label="支店名"
                   color="secondary"
-                  className="w-[340px]"
+                  className="w-[365px]"
                   classNames={{
                     label: "text-default-600",
                   }}
@@ -320,11 +320,13 @@ export default function Page() {
                     </SelectItem>
                   ))}
                 </Select>
+              </div>
+              <div>
                 <Select
                   size="sm"
                   label="担当者"
                   color="secondary"
-                  className="w-[340px]"
+                  className="w-[365px]"
                   classNames={{
                     label: "text-default-600",
                   }}
@@ -345,12 +347,12 @@ export default function Page() {
                   ))}
                 </Select>
               </div>
-              <div className="min-w-[616px] flex-1 max-w-[980px] flex flex-row justify-between space-x-[8px]">
+              <div className="flex flex-row justify-between space-x-[8px]">
                 <Select
                   size="sm"
                   label="管理担当用実行確定"
                   color="secondary"
-                  className="w-[200px] min-w-[200px]"
+                  className="w-[200px] min-w-[120px]"
                   classNames={{
                     label: "text-default-600 ",
                   }}
@@ -375,7 +377,7 @@ export default function Page() {
                   size="sm"
                   label="SHBS財務Ｇ報告用"
                   color="secondary"
-                  className="w-[200px] min-w-[200px]"
+                  className="w-[200px] min-w-[120px]"
                   classNames={{
                     label: "text-default-600",
                   }}
@@ -400,7 +402,7 @@ export default function Page() {
                   size="sm"
                   label="SHBS確認欄"
                   color="secondary"
-                  className="w-[200px] min-w-[200px]"
+                  className="w-[200px] min-w-[120px]"
                   classNames={{
                     label: "text-default-600",
                   }}
@@ -425,313 +427,306 @@ export default function Page() {
             </div>
           </div>
           <Divider />
-          <div className=" flex flex-row justify-between space-x-12">
-            <div className=" flex-1 max-w-[980px] flex flex-row justify-between items-start space-x-10">
-              <div className="w-[340px] space-y-2">
-                <div className="text-secondary-600">ローン情報</div>
-                <div className="flex flex-col justify-start items-start space-y-2">
-                  <Select
-                    size="sm"
-                    name="bank_id"
-                    value={formik.values.bank_id}
-                    onChange={formik.handleChange}
-                    selectedKeys={
-                      !!formik.values.bank_id ? [formik.values.bank_id] : []
-                    }
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                    }}
-                    label="金融機関"
-                    labelPlacement="outside-left"
-                  >
-                    {bankTypes.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {option.name}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Select
-                    size="sm"
-                    name="loan_target"
-                    value={formik.values.loan_target}
-                    onChange={formik.handleChange}
-                    selectedKeys={
-                      !!formik.values.loan_target
-                        ? [formik.values.loan_target]
-                        : []
-                    }
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[170px] min-w-[170px]",
-                    }}
-                    label="ローン対象"
-                    labelPlacement="outside-left"
-                  >
-                    {["土地", "建物中間", "建物最終"].map((item) => (
-                      <SelectItem key={item} value={item}>
-                        {item}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Select
-                    size="sm"
-                    name="ap_loan_applicable"
-                    value={formik.values.ap_loan_applicable}
-                    onChange={formik.handleChange}
-                    selectedKeys={
-                      !!formik.values.ap_loan_applicable
-                        ? [formik.values.ap_loan_applicable]
-                        : []
-                    }
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[170px] min-w-[170px]",
-                    }}
-                    label="APローン該当"
-                    labelPlacement="outside-left"
-                  >
-                    {["有", "無"].map((item) => (
-                      <SelectItem key={item} value={item}>
-                        {item}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Input
-                    size="sm"
-                    type="date"
-                    name="exe_date"
-                    value={formik.values?.exe_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="実行日"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-                  <Input
-                    size="sm"
-                    name="house_code"
-                    value={formik.values?.house_code}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="邸コード"
-                    labelPlacement="outside-left"
-                  />
-                  <Input
-                    size="sm"
-                    name="house_name"
-                    value={formik.values?.house_name}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="邸名"
-                    labelPlacement="outside-left"
-                  />
-                  <Input
-                    size="sm"
-                    name="loan_amount"
-                    value={formik.values?.loan_amount.toLocaleString()}
-                    onChange={(e) => {
-                      formik.setFieldValue(
-                        "loan_amount",
-                        !!e.target.value
-                          ? parseInt(e.target.value.replaceAll(",", ""))
-                          : ""
-                      );
-                    }}
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="借入金額"
-                    labelPlacement="outside-left"
-                  />
-                  <Input
-                    size="sm"
-                    name="deduction_amount"
-                    value={
-                      !!formik.values?.deduction_amount
-                        ? formik.values?.deduction_amount.toLocaleString()
+          <div className="grid grid-cols-3">
+            <div className="space-y-2">
+              <div className="text-secondary-600">ローン情報</div>
+              <div className="flex flex-col justify-start items-start space-y-2">
+                <Select
+                  size="sm"
+                  name="bank_id"
+                  value={formik.values.bank_id}
+                  onChange={formik.handleChange}
+                  selectedKeys={
+                    !!formik.values.bank_id ? [formik.values.bank_id] : []
+                  }
+                  color="secondary"
+                  className="w-[365px]"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                  }}
+                  label="金融機関"
+                  labelPlacement="outside-left"
+                >
+                  {bankTypes.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Select
+                  size="sm"
+                  name="loan_target"
+                  value={formik.values.loan_target}
+                  onChange={formik.handleChange}
+                  selectedKeys={
+                    !!formik.values.loan_target
+                      ? [formik.values.loan_target]
+                      : []
+                  }
+                  color="secondary"
+                  className="w-[365px]"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[170px] min-w-[170px]",
+                  }}
+                  label="ローン対象"
+                  labelPlacement="outside-left"
+                >
+                  {["土地", "建物中間", "建物最終"].map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Select
+                  size="sm"
+                  name="ap_loan_applicable"
+                  value={formik.values.ap_loan_applicable}
+                  onChange={formik.handleChange}
+                  selectedKeys={
+                    !!formik.values.ap_loan_applicable
+                      ? [formik.values.ap_loan_applicable]
+                      : []
+                  }
+                  color="secondary"
+                  className="w-[365px]"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[170px] min-w-[170px]",
+                  }}
+                  label="APローン該当"
+                  labelPlacement="outside-left"
+                >
+                  {["有", "無"].map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Input
+                  size="sm"
+                  type="date"
+                  name="exe_date"
+                  value={formik.values?.exe_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="実行日"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
+                <Input
+                  size="sm"
+                  name="house_code"
+                  value={formik.values?.house_code}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="邸コード"
+                  labelPlacement="outside-left"
+                />
+                <Input
+                  size="sm"
+                  name="house_name"
+                  value={formik.values?.house_name}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="邸名"
+                  labelPlacement="outside-left"
+                />
+                <Input
+                  size="sm"
+                  name="loan_amount"
+                  value={formik.values?.loan_amount.toLocaleString()}
+                  onChange={(e) => {
+                    formik.setFieldValue(
+                      "loan_amount",
+                      !!e.target.value
+                        ? parseInt(e.target.value.replaceAll(",", ""))
                         : ""
-                    }
-                    onChange={(e) => {
-                      formik.setFieldValue(
-                        "deduction_amount",
-                        !!e.target.value
-                          ? parseInt(e.target.value.replaceAll(",", ""))
-                          : 0
-                      );
-                    }}
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="差引諸費用"
-                    labelPlacement="outside-left"
-                  />
-                  <Input
-                    size="sm"
-                    isReadOnly={true}
-                    value={
-                      formik.values?.loan_amount -
-                        formik.values?.deduction_amount >
-                      0
-                        ? (
-                            formik.values?.loan_amount -
-                            formik.values?.deduction_amount
-                          ).toLocaleString()
-                        : ""
-                    }
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="着金金額（自動計算）"
-                    labelPlacement="outside-left"
-                  />
-                </div>
-              </div>
-              <div className="w-[340px] space-y-2">
-                <div className="text-secondary-600">抵当権情報</div>
-                <div className="flex flex-col justify-start items-start space-y-2">
-                  <Input
-                    size="sm"
-                    name="collection_date"
-                    type="date"
-                    value={formik.values?.collection_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="権利証（回収日）"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-
-                  <Input
-                    size="sm"
-                    name="receive_date"
-                    type="date"
-                    value={formik.values?.receive_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="抵当権（書類受理日）"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-
-                  <Input
-                    size="sm"
-                    name="registrate_date"
-                    type="date"
-                    value={formik.values?.registrate_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="抵当権（登記依頼日）"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-
-                  <Input
-                    size="sm"
-                    name="schedule_date"
-                    type="date"
-                    value={formik.values?.schedule_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="抵当権（完了予定日）"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-                  <Input
-                    size="sm"
-                    name="establish_date"
-                    type="date"
-                    value={formik.values?.establish_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="抵当権（設定日）"
-                    labelPlacement="outside-left"
-                    placeholder="yyyy-mm-dd"
-                  />
-
-                  <Input
-                    size="sm"
-                    name="doc_send_date"
-                    type="date"
-                    value={formik.values?.doc_send_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="抵当権（設定書類送付日）"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-
-                  <Input
-                    size="sm"
-                    name="confirm_date"
-                    type="date"
-                    value={formik.values?.confirm_date}
-                    onChange={formik.handleChange}
-                    color="secondary"
-                    className="w-[320px]"
-                    classNames={{
-                      label: "text-default-600 min-w-[130px]",
-                      input: "w-[194px] min-w-[194px]",
-                    }}
-                    label="責任者確認日"
-                    placeholder="yyyy-mm-dd"
-                    labelPlacement="outside-left"
-                  />
-                </div>
+                    );
+                  }}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="借入金額"
+                  labelPlacement="outside-left"
+                />
+                <Input
+                  size="sm"
+                  name="deduction_amount"
+                  value={
+                    !!formik.values?.deduction_amount
+                      ? formik.values?.deduction_amount.toLocaleString()
+                      : ""
+                  }
+                  onChange={(e) => {
+                    formik.setFieldValue(
+                      "deduction_amount",
+                      !!e.target.value
+                        ? parseInt(e.target.value.replaceAll(",", ""))
+                        : 0
+                    );
+                  }}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="差引諸費用"
+                  labelPlacement="outside-left"
+                />
+                <Input
+                  size="sm"
+                  isReadOnly={true}
+                  value={
+                    formik.values?.loan_amount -
+                      formik.values?.deduction_amount >
+                    0
+                      ? (
+                          formik.values?.loan_amount -
+                          formik.values?.deduction_amount
+                        ).toLocaleString()
+                      : ""
+                  }
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="着金金額（自動計算）"
+                  labelPlacement="outside-left"
+                />
               </div>
             </div>
+            <div className="space-y-2">
+              <div className="text-secondary-600">抵当権情報</div>
+              <div className="flex flex-col justify-start items-start space-y-2">
+                <Input
+                  size="sm"
+                  name="collection_date"
+                  type="date"
+                  value={formik.values?.collection_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="権利証（回収日）"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
 
-            <div className=" space-y-2 min-w-[616px] max-w-[980px] flex-1 ">
+                <Input
+                  size="sm"
+                  name="receive_date"
+                  type="date"
+                  value={formik.values?.receive_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="抵当権（書類受理日）"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
+
+                <Input
+                  size="sm"
+                  name="registrate_date"
+                  type="date"
+                  value={formik.values?.registrate_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="抵当権（登記依頼日）"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
+
+                <Input
+                  size="sm"
+                  name="schedule_date"
+                  type="date"
+                  value={formik.values?.schedule_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="抵当権（完了予定日）"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
+                <Input
+                  size="sm"
+                  name="establish_date"
+                  type="date"
+                  value={formik.values?.establish_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="抵当権（設定日）"
+                  labelPlacement="outside-left"
+                  placeholder="yyyy-mm-dd"
+                />
+
+                <Input
+                  size="sm"
+                  name="doc_send_date"
+                  type="date"
+                  value={formik.values?.doc_send_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="抵当権（設定書類送付日）"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
+
+                <Input
+                  size="sm"
+                  name="confirm_date"
+                  type="date"
+                  value={formik.values?.confirm_date}
+                  onChange={formik.handleChange}
+                  color="secondary"
+                  classNames={{
+                    label: "text-default-600 min-w-[155px]",
+                    input: "w-[194px] min-w-[194px]",
+                  }}
+                  label="責任者確認日"
+                  placeholder="yyyy-mm-dd"
+                  labelPlacement="outside-left"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
               <div className="text-secondary-600">備考情報</div>
               <div className="flex flex-col justify-between items-start space-y-2">
                 <Textarea
@@ -740,7 +735,7 @@ export default function Page() {
                   onChange={formik.handleChange}
                   color="secondary"
                   label="備考(ハイム使用欄）"
-                  className="min-w-[616px] w-full"
+                  className="min-w-xs w-full"
                   classNames={{
                     label: "text-default-600",
                     input: "min-h-[148px]",
@@ -752,7 +747,7 @@ export default function Page() {
                   onChange={formik.handleChange}
                   color="secondary"
                   label="備考(ＳＨＢＳ使用欄）"
-                  className="min-w-[616px] w-full"
+                  className="min-w-xs w-full"
                   classNames={{
                     label: "text-default-600",
                     input: "min-h-[148px]",

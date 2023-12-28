@@ -29,7 +29,7 @@ export default function Page() {
     onSubmit: async (data) => {
       try {
         await login(data.email, data.password);
-        router.push("/dashboard/org-manage");
+        router.push("/dashboard/case-manage");
       } catch (error) {
         console.error(error);
       }
